@@ -40,5 +40,5 @@ requirements: requirements.txt
 requirements.txt: requirements.in
 	$(VENV_ACTIVATE) && ${VENV_NAME}/bin/pip-compile --output-file=requirements.txt requirements.in
 
-run:
+run: venv
 	$(VENV_ACTIVATE) && ${PYTHON} src/agent/sim_agent.py 1234
