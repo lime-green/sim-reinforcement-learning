@@ -1,14 +1,14 @@
-import numpy as np
 from gym.wrappers import FlattenObservation
 from stable_baselines3.common.evaluation import evaluate_policy
 
+from model.dqn import MaskedDQN, MaskedPolicy
 from model.ppo import MaskablePPO
 from sim_gym.environment import WoWSimsEnv
 
 
 def policy_callback(l, g):
     if l["info"]["is_success"]:
-         print(l["info"]["dps"])
+        print(l["info"]["dps"])
 
 
 def learn():
