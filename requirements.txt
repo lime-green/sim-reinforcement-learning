@@ -5,24 +5,65 @@
 #    pip-compile --output-file=requirements.txt requirements.in
 #
 cloudpickle==2.2.1
-    # via gymnasium
-gymnasium==0.27.1
-    # via -r requirements.in
-gymnasium-notices==0.0.1
-    # via gymnasium
-jax-jumpy==0.2.0
-    # via gymnasium
+    # via
+    #   gym
+    #   stable-baselines3
+contourpy==1.0.7
+    # via matplotlib
+cycler==0.11.0
+    # via matplotlib
+fonttools==4.38.0
+    # via matplotlib
+gym==0.21
+    # via stable-baselines3
+importlib-metadata==4.13.0
+    # via stable-baselines3
+kiwisolver==1.4.4
+    # via matplotlib
 markdown-it-py==2.2.0
     # via rich
+matplotlib==3.7.1
+    # via stable-baselines3
 mdurl==0.1.2
     # via markdown-it-py
 numpy==1.24.2
     # via
-    #   gymnasium
-    #   jax-jumpy
+    #   contourpy
+    #   gym
+    #   matplotlib
+    #   pandas
+    #   stable-baselines3
+packaging==23.0
+    # via matplotlib
+pandas==1.5.3
+    # via stable-baselines3
+pillow==9.4.0
+    # via matplotlib
 pygments==2.14.0
     # via rich
+pyparsing==3.0.9
+    # via matplotlib
+python-dateutil==2.8.2
+    # via
+    #   matplotlib
+    #   pandas
+pytz==2022.7.1
+    # via pandas
 rich==13.3.1
     # via -r requirements.in
+sb3-contrib==1.7.0
+    # via -r requirements.in
+six==1.16.0
+    # via python-dateutil
+stable-baselines3==1.7.0
+    # via
+    #   -r requirements.in
+    #   sb3-contrib
+torch==1.13.1
+    # via stable-baselines3
+tqdm==4.65.0
+    # via -r requirements.in
 typing-extensions==4.5.0
-    # via gymnasium
+    # via torch
+zipp==3.15.0
+    # via importlib-metadata

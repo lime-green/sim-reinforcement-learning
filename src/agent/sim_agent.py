@@ -3,7 +3,8 @@ import socket
 import sys
 from typing import Optional
 
-from sim_config import create_config
+from logger import logger
+from agent.sim_config import create_config
 
 
 class SimRequest:
@@ -78,14 +79,15 @@ class SimConnection:
         if not self.is_connected:
             raise Exception("Not connected")
 
-        print("Sending request", request.serialize())
+        logger.debug("Sending request", request.serialize())
         body = request.serialize().encode("utf-8")
         payload = len(body).to_bytes(4, byteorder="little") + body
         self._connection.sendall(payload)
+        logger.debug("finished sending request")
 
         response_length = int.from_bytes(self._connection.recv(4), byteorder="little")
         response = self._connection.recv(response_length)
-        print("Got response", response.decode("utf-8"))
+        logger.debug("Got response", response.decode("utf-8"))
 
         response = SimResponse(response.decode("utf-8"))
         assert response.success
@@ -135,21 +137,3 @@ if __name__ == "__main__":
 
     sim_config = create_config(random_seed=0)
     state = agent.reset(sim_config)
-
-    agent.cast("Pestilence")
-    agent.wait(13500)
-    agent.cast("Pestilence")
-    agent.wait(1500)
-    agent.cast("Pestilence")
-    agent.cast("BloodTap")
-    agent.wait(1500)
-    # agent.wait(15000)
-    # agent.wait(1200)
-    # agent.cast("IcyTouch")
-    # agent.cast("HyperspeedAcceleration")
-    # agent.cast("BloodFury")
-    # agent.wait(agent.get_state()["gcdRemaining"])
-    # agent.cast("IcyTouch")
-    # agent.wait(agent.get_state()["gcdRemaining"])
-    # agent.cast("BloodStrike")
-    agent.wait(500000)

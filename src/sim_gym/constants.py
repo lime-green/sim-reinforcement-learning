@@ -5,7 +5,6 @@ SPELLS = [
     "PlagueStrike",
     "IcyTouch",
     "HornOfWinter",
-    "DancingRuneWeapon",
     "Obliterate",
     "HowlingBlast",
     "FrostStrike",

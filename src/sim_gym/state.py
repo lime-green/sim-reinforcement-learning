@@ -1,7 +1,9 @@
-from gymnasium.spaces import Discrete, Box, MultiBinary
-import numpy as np
+import json
 
-from constants import BUFFS, DEBUFFS, SPELLS, RUNE_TYPE_MAP
+import numpy as np
+from gym.spaces import Dict, Discrete, Box, MultiBinary, Space
+
+from .constants import BUFFS, DEBUFFS, SPELLS, RUNE_TYPE_MAP
 
 
 SPELL_SET = set(SPELLS)
@@ -36,11 +38,11 @@ class State:
     def is_done(self):
         return self._raw_state["isDone"]
 
-    def calculate_reward(self, last_dps):
-        # TODO: Figure out if this is a good reward function
-        return self.dps - last_dps
+    def can_cast(self, spell):
+        return self._abilities_map[spell]["canCast"]
 
     def get_observations(self):
+        from gym.spaces.utils import flatten_space
         return {
             # Discrete
             "isExecute35": self._raw_state["isExecute35"],
@@ -64,7 +66,7 @@ class State:
 
     @staticmethod
     def get_observation_space():
-        return {
+        return Dict({
             # Discrete
             "isExecute35": Discrete(2),
             "runeTypes": Box(low=0, high=3, shape=(6,), dtype=np.uint8),
@@ -75,15 +77,15 @@ class State:
 
             # Continuous
             "abilityCDs": Box(low=0, high=1000*60*60, shape=(len(SPELLS),), dtype=np.int32),
-            "abilityGCDs": Box(low=0, high=1500, shape=(len(SPELLS),), dtype=np.int32),
+            "abilityGCDs": Box(low=0, high=1501, shape=(len(SPELLS),), dtype=np.int32),
             "debuffDurations": Box(low=0, high=1000*60*60, shape=(len(DEBUFFS),), dtype=np.int32),
             "buffDurations": Box(low=0, high=1000*60*60, shape=(len(BUFFS),), dtype=np.int32),
-            "gcdRemaining": Box(low=0, high=1500, dtype=np.int32),
-            "currentTime": Box(low=0, high=1000*60*60, dtype=np.int32),
-            "timeRemaining": Box(low=0, high=1000*60*60, dtype=np.int32),
+            "gcdRemaining": Box(low=0, high=1500, shape=(1,), dtype=np.int32),
+            "currentTime": Box(low=0, high=1000*60*60, shape=(1,), dtype=np.int32),
+            "timeRemaining": Box(low=0, high=1000*60*60, shape=(1,), dtype=np.int32),
             "runeCDs": Box(low=0, high=1000*10, shape=(6,), dtype=np.int32),
             "runeGraces": Box(low=0, high=2500, shape=(6,), dtype=np.int32),
-        }
+        })
 
     @property
     def abilities(self):
@@ -94,3 +96,9 @@ class State:
         ]
 
         return abilities
+
+    def get_ability_mask(self):
+        return [int(ability["canCast"]) for ability in self.abilities]
+
+    def __repr__(self):
+        return json.dumps(self._raw_state)

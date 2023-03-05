@@ -1,2 +1,4 @@
 rich
-gymnasium
+stable-baselines3
+tqdm
+sb3-contrib

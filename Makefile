@@ -3,6 +3,7 @@
 VENV_NAME?=venv
 VENV_ACTIVATE=. $(VENV_NAME)/bin/activate
 PYTHON=${VENV_NAME}/bin/python3.10
+export PYTHONPATH := src:$(PYTHONPATH)
 
 .DEFAULT: help
 help:
@@ -17,7 +18,7 @@ prepare-dev:
 	make venv
 
 venv: $(VENV_NAME)/bin/activate
-$(VENV_NAME)/bin/activate: requirements.in
+$(VENV_NAME)/bin/activate: requirements.txt
 	test -d $(VENV_NAME) || python3.10 -m venv $(VENV_NAME)
 	${PYTHON} -m pip install -U pip pip-tools
 	${PYTHON} -m pip install -r requirements.txt
@@ -42,3 +43,6 @@ requirements.txt: requirements.in
 
 run: venv
 	$(VENV_ACTIVATE) && ${PYTHON} src/agent/sim_agent.py 1234
+
+learn: venv
+	$(VENV_ACTIVATE) && ${PYTHON} src/model/learn.py
