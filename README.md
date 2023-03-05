@@ -4,4 +4,4 @@
 git checkout dk-rl
 go run sim/agent/* 1234
 ```
-- In this directory: `make run`
+- In this directory: `make learn`
