@@ -95,9 +95,8 @@ class WoWSimsEnv(gym.Env):
 
         return self._get_obs()
 
-    def render(self, mode='human'):
-        self._render = True
-        return
+    def render(self, mode='ascii'):
+        pass
 
     def close(self):
         self._sim_agent.close()
