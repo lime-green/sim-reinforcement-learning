@@ -3186,7 +3186,8 @@ SIM_CONFIG = {
 }
 
 
-def create_config(random_seed=0):
+def create_config(random_seed=0, duration=180):
     sim_config = deepcopy(SIM_CONFIG)
     sim_config["simOptions"]["randomSeed"] = random_seed
+    sim_config["encounter"]["duration"] = duration
     return sim_config

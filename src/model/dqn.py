@@ -59,14 +59,7 @@ class MaskedDQN(DQN):
         deterministic: bool = False,
     ) -> Tuple[np.ndarray, Optional[Tuple[np.ndarray, ...]]]:
         if not deterministic and np.random.rand() < self.exploration_rate:
-            if is_vectorized_observation(maybe_transpose(observation, self.observation_space), self.observation_space):
-                if isinstance(observation, dict):
-                    n_batch = observation[list(observation.keys())[0]].shape[0]
-                else:
-                    n_batch = observation.shape[0]
-                action = np.array([self.sample_possible_actions()[0] for _ in range(n_batch)])
-            else:
-                action = np.array(self.sample_possible_actions())
+            action = self.sample_possible_actions()
         else:
             action, state = self.policy.predict(observation, state, episode_start, deterministic)
         return action, state
@@ -78,7 +71,7 @@ class MaskedDQN(DQN):
         n_envs: int = 1,
     ) -> Tuple[np.ndarray, np.ndarray]:
         if self.num_timesteps < learning_starts and not (self.use_sde and self.use_sde_at_warmup):
-            unscaled_action = np.array([self.sample_possible_actions()[0] for _ in range(n_envs)])
+            unscaled_action = self.sample_possible_actions()
         else:
             unscaled_action, _ = self.predict(self._last_obs, deterministic=False)
 

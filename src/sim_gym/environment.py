@@ -9,19 +9,19 @@ from sim_gym.constants import SPELLS
 
 
 class WoWSimsEnv(gym.Env):
-    def __init__(self, reward_type: str = "final_dps", mask_invalid_actions: bool = True):
+    def __init__(self, sim_duration, reward_type: str = "final_dps", mask_invalid_actions: bool = True):
         self.action_space = gym.spaces.Discrete(len(ACTION_SPACE))
         self.observation_space = State.get_observation_space()
         self.state = None
         self._last_dps = 0
         self._sim_agent = SimAgent(port="/tmp/sim-agent.sock")
-        # self._console = Console()
         self._rewards = []
         self._reward_type = reward_type
         self._mask_invalid_actions = mask_invalid_actions
         self._steps = 0
         self._bestDPS = 0
         self._render = False
+        self._sim_duration = sim_duration
 
     def step(self, action):
         assert self.action_space.contains(action), "%r invalid" % action
@@ -83,10 +83,10 @@ class WoWSimsEnv(gym.Env):
         return {"dps": self.state.dps, "is_success": self.state.is_done, "steps": self._steps}
 
     def reset(self, seed=None, options=None):
-        if seed is not None:
-            np.random.seed(seed)
-
-        sim_config = create_config(random_seed=seed)
+        sim_config = create_config(
+            random_seed=seed,
+            duration=self._sim_duration,
+        )
         state = self._sim_agent.reset(sim_config)
         self.state = State(state)
         self._last_dps = 0
