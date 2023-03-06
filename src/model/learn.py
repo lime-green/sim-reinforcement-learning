@@ -34,26 +34,32 @@ def create_single_env(env_kwargs):
 
 
 def learn():
-    for i in range(20):
-        env_kwargs = dict(sim_duration=15+i, reward_type="delta_damage", mask_invalid_actions=True, print=False)
+    best = 0
+    j = 0
+    for i in range(40):
+        env_kwargs = dict(sim_duration=15, reward_type="delta_damage", mask_invalid_actions=True, print=False)
         env = create_multi_env(4, env_kwargs)
         #env = create_single_env(env_kwargs)
         model = MaskedDQN(MaskedPolicy, env, verbose=0)
         #model = MaskablePPO("MlpPolicy", env, verbose=1)
         #model = PPO("MlpPolicy", env, verbose=1)
 
-        model_load_path = f"./models/{i - 1}-{model.__class__.__name__}"
-        model_save_path = f"./models/{i}-{model.__class__.__name__}"
+        model_load_path = f"./models/{j}-{model.__class__.__name__}"
+        #model_save_path = f"./models/{i}-{model.__class__.__name__}"
         if os.path.exists(f"{model_load_path}.zip"):
             print("Loading existing model...")
             model.load(model_load_path, env=env)
             print("Done loading model")
 
-        model.learn(total_timesteps=1000000+(20-i)*100000, progress_bar=True)
-        print(evaluate_policy(model, model.env, n_eval_episodes=4, deterministic=True, callback=policy_callback, render=False))
-        print(f"Saving model to {model_load_path}.zip...")
-        model.save(model_save_path, exclude=["policy_kwargs"])
-        print("Done saving model")
+        model.learn(total_timesteps=100000, progress_bar=True)
+        current = evaluate_policy(model, model.env, n_eval_episodes=20, deterministic=True, callback=policy_callback, render=False)
+        if current[1]>best:
+            best = current[1]
+            j = i
+            model_load_path = f"./models/{j}-{model.__class__.__name__}"
+            print(f"Saving model to {model_load_path}.zip...")
+            model.save(model_load_path, exclude=["policy_kwargs"])
+            print("Done saving model")
 
 
 if __name__ == "__main__":
