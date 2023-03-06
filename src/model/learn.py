@@ -34,9 +34,9 @@ def create_single_env(env_kwargs):
 
 
 def learn():
-    env_kwargs = dict(sim_duration=180, reward_type="delta_dps", mask_invalid_actions=True)
-    env = create_multi_env(4, env_kwargs)
-    # env = create_single_env(env_kwargs)
+    env_kwargs = dict(sim_duration=180, reward_type="delta_damage", mask_invalid_actions=True, print=True)
+    #env = create_multi_env(4, env_kwargs)
+    env = create_single_env(env_kwargs)
     model = MaskedDQN(MaskedPolicy, env, verbose=1)
     # model = MaskablePPO("MlpPolicy", env, verbose=1)
 
@@ -46,7 +46,7 @@ def learn():
         model.load(model_load_path, env=env)
         print("Done loading model")
 
-    model.learn(total_timesteps=10, progress_bar=True)
+    model.learn(total_timesteps=100000, progress_bar=True)
     print(evaluate_policy(model, model.get_env(), n_eval_episodes=1, deterministic=True, callback=policy_callback))
     print(f"Saving model to {model_load_path}.zip...")
     model.save(model_load_path, exclude=["policy_kwargs"])

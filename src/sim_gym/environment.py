@@ -9,7 +9,7 @@ from sim_gym.constants import SPELLS
 
 
 class WoWSimsEnv(gym.Env):
-    def __init__(self, sim_duration, reward_type: str = "final_dps", mask_invalid_actions: bool = True):
+    def __init__(self, sim_duration, reward_type: str = "final_dps", mask_invalid_actions: bool = True, print=True):
         self.action_space = gym.spaces.Discrete(len(ACTION_SPACE))
         self.observation_space = State.get_observation_space()
         self.state = None
@@ -21,6 +21,8 @@ class WoWSimsEnv(gym.Env):
         self._steps = 0
         self._bestDPS = 0
         self._render = False
+        self._print = print
+
         self._sim_duration = sim_duration
         self._damage = 0
         self._last_damage = 0
@@ -46,7 +48,7 @@ class WoWSimsEnv(gym.Env):
         reward = self.calculate_reward()
         self._rewards = reward
 
-        if self._render and num < 14:
+        if self._print and num < 14:
             print(SPELLS[int(num)])
             print(reward)
 
