@@ -25,12 +25,12 @@ def learn():
 
         # check if model path exists, if so, load it
         model_load_path = f"./models/{model.__class__.__name__}"
-        #if os.path.exists(f"{model_load_path}.zip"):
-        #    print("Loading existing model...")
-        #    print(f"{model_load_path}.zip")
-        #    model.load(f"{model_load_path}.zip", env=env)
+        if os.path.exists(f"{model_load_path}.zip"):
+            print("Loading existing model...")
+            print(f"{model_load_path}.zip")
+            model.load(f"{model_load_path}.zip", env=env)
 
-        model.learn(total_timesteps=1000000, progress_bar=True)
+        model.learn(total_timesteps=500000, progress_bar=True)
         print(evaluate_policy(model, model.get_env(), n_eval_episodes=1, deterministic=True, render=True, callback=policy_callback))
         print(f"Saving model to {model_load_path}...")
         model.save(model_load_path)

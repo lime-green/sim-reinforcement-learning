@@ -41,21 +41,23 @@ class WoWSimsEnv(gym.Env):
         new_state = self._sim_agent.get_state()
         self.state = State(new_state)
 
-        if len(self._rewards) == 0:
-            self._rewards.append(0)
-            self._rewards.append(0)
-            self._rewards.append(0)
+        #if len(self._rewards) == 0:
+        #    self._rewards.append(0)
+        #    self._rewards.append(0)
+        #    self._rewards.append(0)
 
-        self._rewards[2] = self.state.damage/100
-        reward = self.calculate_reward()
-
-        self._rewards[0] = reward
+        #self._rewards[2] = self.state.damage/100
+        #reward = self.calculate_reward()
+        self._rewards = self.state.damage/100
+        #self._rewards[0] = reward
         #self._rewards = self._rewards / np.linalg.norm(self._rewards)
+
+
+        reward = self.state.damage/100
         if self._render and num<14:
             print(SPELLS[int(num)])
-            print(self._rewards)
+            print(reward)
         done = self.state.is_done
-
         obs = self._get_obs()
         self._last_dps = self.state.dps
         # if str(action).find("Cast"):
