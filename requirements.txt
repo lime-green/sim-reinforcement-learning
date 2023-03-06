@@ -33,6 +33,8 @@ numpy==1.24.2
     #   matplotlib
     #   pandas
     #   stable-baselines3
+orjson==3.8.7
+    # via -r requirements.in
 packaging==23.0
     # via matplotlib
 pandas==1.5.3

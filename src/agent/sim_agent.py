@@ -1,4 +1,4 @@
-import json
+import orjson
 import socket
 import sys
 from typing import Optional
@@ -13,7 +13,7 @@ class SimRequest:
         self._body = body
 
     def serialize(self):
-        return json.dumps({
+        return orjson.dumps({
             "command": self._command,
             "body": self._body,
         })
@@ -42,7 +42,7 @@ class WaitDuration(SimRequest):
 class SimResponse:
     def __init__(self, raw_response):
         self._raw_response = raw_response
-        self._json = json.loads(raw_response)
+        self._json = orjson.loads(raw_response)
 
     @property
     def success(self):
@@ -59,9 +59,9 @@ class SimConnection:
         self._port = port
 
     def connect(self):
-        self._connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._connection = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         self._connection.settimeout(1.0)
-        self._connection.connect(("localhost", self._port))
+        self._connection.connect(self._port)
 
     def disconnect(self):
         try:
@@ -79,19 +79,26 @@ class SimConnection:
         if not self.is_connected:
             raise Exception("Not connected")
 
-        logger.debug("Sending request", request.serialize())
-        body = request.serialize().encode("utf-8")
+        body = request.serialize()
+        logger.debug("Sending request", body)
         payload = len(body).to_bytes(4, byteorder="little") + body
         self._connection.sendall(payload)
         logger.debug("finished sending request")
 
         response_length = int.from_bytes(self._connection.recv(4), byteorder="little")
         response = self._connection.recv(response_length)
-        logger.debug("Got response", response.decode("utf-8"))
 
-        response = SimResponse(response.decode("utf-8"))
+        response = SimResponse(response)
         assert response.success
         return response.body
+
+    # pickle support
+    def __getstate__(self):
+        return self._port
+
+    def __setstate__(self, port):
+        self._port = port
+        self._connection = None
 
 
 class SimAgent:

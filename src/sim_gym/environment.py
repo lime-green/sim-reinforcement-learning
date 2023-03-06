@@ -1,6 +1,5 @@
 import gym
 import numpy as np
-from rich.console import Console
 
 from agent.sim_agent import SimAgent
 from agent.sim_config import create_config
@@ -14,15 +13,17 @@ class WoWSimsEnv(gym.Env):
         self.observation_space = State.get_observation_space()
         self.state = None
         self._last_dps = 0
-        self._sim_agent = SimAgent(port=1234)
-        self._console = Console()
+        self._sim_agent = SimAgent(port="/tmp/sim-agent.sock")
+        # self._console = Console()
         self._rewards = []
         self._reward_type = reward_type
         self._mask_invalid_actions = mask_invalid_actions
+        self._steps = 0
 
     def step(self, action):
         assert self.action_space.contains(action), "%r invalid" % action
 
+        self._steps += 1
         action: Action = ACTION_SPACE[action]
 
         if self._mask_invalid_actions:
@@ -58,7 +59,7 @@ class WoWSimsEnv(gym.Env):
         return reward
 
     def get_metadata(self):
-        return {"dps": self.state.dps, "is_success": self.state.is_done}
+        return {"dps": self.state.dps, "is_success": self.state.is_done, "steps": self._steps}
 
     def reset(self, seed=None, options=None):
         if seed is not None:
@@ -69,12 +70,11 @@ class WoWSimsEnv(gym.Env):
         self.state = State(state)
         self._last_dps = 0
         self._rewards = []
+        self._steps = 0
 
         return self._get_obs()
 
     def render(self, mode='human'):
-        self._console.print(self.state)
-        self._console.print(self.state.dps)
         return
 
     def close(self):
