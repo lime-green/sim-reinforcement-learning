@@ -1,6 +1,6 @@
 import gym
 import numpy as np
-
+import math
 from agent.sim_agent import SimAgent
 from agent.sim_config import create_config
 from sim_gym.actions import ACTION_SPACE, Action
@@ -18,10 +18,11 @@ class WoWSimsEnv(gym.Env):
         self._mask_invalid_actions = mask_invalid_actions
         self._steps = 0
         self._print = print
-
+        self._commands = ""
         self._sim_duration = sim_duration
         self._last_dps = 0
         self._last_damage = 0
+        self._totalDamage = 0
 
     def step(self, action):
         assert self.action_space.contains(action), "%r invalid" % action
@@ -43,13 +44,31 @@ class WoWSimsEnv(gym.Env):
 
         reward = self.calculate_reward()
 
-        if self._print:
-            print(action, reward)
-
+        if True: #self._print:
+            if "Wait50" in str(action):
+                a=1
+                #print(">Wait50", math.floor(reward), end = '')
+            elif "WaitGCD" in str(action):
+                a=1
+                #print(">GCD", math.floor(reward), end = '')
+            else:
+                self._commands = self._commands + str(str(action).replace("CastAction(spell='", "")).replace("')"," ") + str(math.floor(reward))+ " >"
         done = self.state.is_done
         obs = self._get_obs()
         self._last_dps = self.state.dps
         self._last_damage = self.state.damage
+
+        if self.state.is_done and self._totalDamage < self.state.damage:
+            self._last_damage = 0
+            self._totalDamage = self.state.damage
+            print("New best found:")
+            print(self._commands)
+            print("total = ", self._totalDamage)
+            print("---------------------------------------------------------------------")
+            print(" ")
+        elif self.state.is_done:
+            self._last_damage = 0
+            self._commands = ""
         return obs, reward, done, self.get_metadata()
 
     def calculate_reward(self):
@@ -57,7 +76,10 @@ class WoWSimsEnv(gym.Env):
         if self._reward_type == "delta_dps":
             reward = self.state.dps - self._last_dps
         elif self._reward_type == "delta_damage":
-            reward = self.state.damage - self._last_damage
+            if self.state.is_done:
+                reward = self.state.damage
+            else:
+                reward = self.state.damage - self._last_damage
         elif self._reward_type == "final_dps" and self.state.is_done:
             reward = self.state.dps
         elif self._reward_type == "final_damage" and self.state.is_done:
@@ -84,6 +106,7 @@ class WoWSimsEnv(gym.Env):
         return self._get_obs()
 
     def render(self, mode='ascii'):
+        self._print = True
         pass
 
     def close(self):

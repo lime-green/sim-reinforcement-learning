@@ -4,16 +4,16 @@ SPELLS = [
     "BloodStrike",
     "PlagueStrike",
     "IcyTouch",
-    "HornOfWinter",
     "Obliterate",
     "HowlingBlast",
     "FrostStrike",
-    "EmpowerRuneWeapon",
-    "RaiseDead",
     "UnbreakableArmor",
     "BloodTap",
     "BloodFury",
     "HyperspeedAcceleration",
+    "HornOfWinter",
+    "EmpowerRuneWeapon",
+    "RaiseDead",
 ]
 
 DEBUFFS = ["FrostFever", "BloodPlague"]

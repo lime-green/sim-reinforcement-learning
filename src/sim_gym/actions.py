@@ -51,10 +51,41 @@ cast_actions = [
     CastAction(spell)
     for spell in SPELLS
 ]
-
+cast_actions2 = [
+    CastAction("Pestilence"),
+    CastAction("BloodStrike"),
+    CastAction("PlagueStrike"),
+    CastAction("IcyTouch"),
+    CastAction("Obliterate"),
+    CastAction("HowlingBlast"),
+    CastAction("FrostStrike"),
+]
 wait_actions = [
     Wait50(),
     WaitGCD(),
 ]
+wait_actions2 = [
+    #Wait50(),
+    WaitGCD(),
+]
 
 ACTION_SPACE = cast_actions + wait_actions
+ACTION_SPACE2 = cast_actions2 + wait_actions2
+
+
+##SPELLS = [
+ #   "Pestilence",
+ #   "BloodStrike",
+ #   "PlagueStrike",
+ #   "IcyTouch",
+ #   "HornOfWinter",
+ #   "Obliterate",
+ #   "HowlingBlast",
+ #   "FrostStrike",
+  #  "EmpowerRuneWeapon",
+ #   "RaiseDead",
+ #   "UnbreakableArmor",
+ #   "BloodTap",
+ #   "BloodFury",
+ #   "HyperspeedAcceleration",
+#]
