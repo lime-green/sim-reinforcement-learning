@@ -13,18 +13,14 @@ class WoWSimsEnv(gym.Env):
         self.action_space = gym.spaces.Discrete(len(ACTION_SPACE))
         self.observation_space = State.get_observation_space()
         self.state = None
-        self._last_dps = 0
         self._sim_agent = SimAgent(port="/tmp/sim-agent.sock")
-        self._rewards = []
         self._reward_type = reward_type
         self._mask_invalid_actions = mask_invalid_actions
         self._steps = 0
-        self._bestDPS = 0
-        self._render = False
         self._print = print
 
         self._sim_duration = sim_duration
-        self._damage = 0
+        self._last_dps = 0
         self._last_damage = 0
 
     def step(self, action):
@@ -46,7 +42,6 @@ class WoWSimsEnv(gym.Env):
         self.state = State(new_state)
 
         reward = self.calculate_reward()
-        self._rewards = reward
 
         if self._print and num < 14:
             print(SPELLS[int(num)])
@@ -66,6 +61,8 @@ class WoWSimsEnv(gym.Env):
             reward = self.state.damage - self._last_damage
         elif self._reward_type == "final_dps" and self.state.is_done:
             reward = self.state.dps
+        elif self._reward_type == "final_damage" and self.state.is_done:
+            reward = self.state.damage - self._last_damage
         elif self._reward_type == "abs_dps":
             reward = self.state.dps
         elif self._reward_type == "abs_damage":
@@ -83,7 +80,6 @@ class WoWSimsEnv(gym.Env):
         state = self._sim_agent.reset(sim_config)
         self.state = State(state)
         self._last_dps = 0
-        self._rewards = []
         self._steps = 0
 
         return self._get_obs()

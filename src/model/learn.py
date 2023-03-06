@@ -35,13 +35,13 @@ def create_single_env(env_kwargs):
 
 def learn():
     env_kwargs = dict(sim_duration=180, reward_type="delta_damage", mask_invalid_actions=True, print=True)
-    #env = create_multi_env(4, env_kwargs)
+    #env = create_multi_env(16, env_kwargs)
     env = create_single_env(env_kwargs)
     model = MaskedDQN(MaskedPolicy, env, verbose=1)
     # model = MaskablePPO("MlpPolicy", env, verbose=1)
 
     model_load_path = f"./models/{model.__class__.__name__}"
-    if os.path.exists(f"{model_load_path}.zip"):
+    if int(os.environ.get("LOAD", 0)) and os.path.exists(f"{model_load_path}.zip"):
         print("Loading existing model...")
         model.load(model_load_path, env=env)
         print("Done loading model")
