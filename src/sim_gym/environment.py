@@ -22,6 +22,8 @@ class WoWSimsEnv(gym.Env):
         self._bestDPS = 0
         self._render = False
         self._sim_duration = sim_duration
+        self._damage = 0
+        self._last_damage = 0
 
     def step(self, action):
         assert self.action_space.contains(action), "%r invalid" % action
@@ -41,42 +43,31 @@ class WoWSimsEnv(gym.Env):
         new_state = self._sim_agent.get_state()
         self.state = State(new_state)
 
-        #if len(self._rewards) == 0:
-        #    self._rewards.append(0)
-        #    self._rewards.append(0)
-        #    self._rewards.append(0)
+        reward = self.calculate_reward()
+        self._rewards = reward
 
-        #self._rewards[2] = self.state.damage/100
-        #reward = self.calculate_reward()
-        self._rewards = self.state.damage/100
-        #self._rewards[0] = reward
-        #self._rewards = self._rewards / np.linalg.norm(self._rewards)
-
-
-        reward = self.state.damage/100
-        if self._render and num<14:
+        if self._render and num < 14:
             print(SPELLS[int(num)])
             print(reward)
+
         done = self.state.is_done
         obs = self._get_obs()
         self._last_dps = self.state.dps
-        # if str(action).find("Cast"):
-        #    print(action)
+        self._last_damage = self.state.damage
         return obs, reward, done, self.get_metadata()
 
     def calculate_reward(self):
         reward = 0
-
         if self._reward_type == "delta_dps":
             reward = self.state.dps - self._last_dps
-            self._rewards[1] = self.state.dps/100
+        elif self._reward_type == "delta_damage":
+            reward = self.state.damage - self._last_damage
         elif self._reward_type == "final_dps" and self.state.is_done:
             reward = self.state.dps
-        elif self._reward_type == "just_dps":
+        elif self._reward_type == "abs_dps":
             reward = self.state.dps
-        #if reward > self._bestDPS:
-            #self._bestDPS = reward
-            #print("Best reward: " + str(reward))
+        elif self._reward_type == "abs_damage":
+            reward = self.state.damage
         return reward
 
     def get_metadata(self):
