@@ -25,8 +25,8 @@ def learn():
 
         # check if model path exists, if so, load it
         model_load_path = f"./models/{model.__class__.__name__}"
-        if os.path.exists(model_load_path):
-            print("Loading existing model")
+        if os.path.exists(f"{model_load_path}.zip"):
+            print("Loading existing model...")
             model.load(model_load_path, env=env)
 
         model.learn(total_timesteps=1, progress_bar=True)
