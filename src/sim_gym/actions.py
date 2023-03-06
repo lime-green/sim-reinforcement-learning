@@ -16,11 +16,12 @@ class Action:
 @dataclass
 class CastAction(Action):
     spell: str
-
     def do(self, agent: SimAgent, state: State):
+        #print(self.spell)
         return agent.cast(self.spell)
 
     def can_do(self, state: State):
+        #print(self.spell)
         return state.can_cast(self.spell)
 
 

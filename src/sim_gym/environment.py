@@ -5,6 +5,7 @@ from agent.sim_agent import SimAgent
 from agent.sim_config import create_config
 from sim_gym.actions import ACTION_SPACE, Action
 from sim_gym.state import State
+from sim_gym.constants import SPELLS
 
 
 class WoWSimsEnv(gym.Env):
@@ -19,9 +20,12 @@ class WoWSimsEnv(gym.Env):
         self._reward_type = reward_type
         self._mask_invalid_actions = mask_invalid_actions
         self._steps = 0
+        self._bestDPS = 0
+        self._render = False
 
     def step(self, action):
         assert self.action_space.contains(action), "%r invalid" % action
+        num = int(action)
 
         self._steps += 1
         action: Action = ACTION_SPACE[action]
@@ -37,13 +41,25 @@ class WoWSimsEnv(gym.Env):
         new_state = self._sim_agent.get_state()
         self.state = State(new_state)
 
+        if len(self._rewards) == 0:
+            self._rewards.append(0)
+            self._rewards.append(0)
+            self._rewards.append(0)
+
+        self._rewards[2] = self.state.damage/100
         reward = self.calculate_reward()
-        self._rewards.append(reward)
+
+        self._rewards[0] = reward
+        #self._rewards = self._rewards / np.linalg.norm(self._rewards)
+        if self._render and num<14:
+            print(SPELLS[int(num)])
+            print(self._rewards)
         done = self.state.is_done
 
         obs = self._get_obs()
         self._last_dps = self.state.dps
-
+        # if str(action).find("Cast"):
+        #    print(action)
         return obs, reward, done, self.get_metadata()
 
     def calculate_reward(self):
@@ -51,11 +67,14 @@ class WoWSimsEnv(gym.Env):
 
         if self._reward_type == "delta_dps":
             reward = self.state.dps - self._last_dps
-            if self.state.is_done:
-                reward += self.state.dps
+            self._rewards[1] = self.state.dps/100
         elif self._reward_type == "final_dps" and self.state.is_done:
             reward = self.state.dps
-
+        elif self._reward_type == "just_dps":
+            reward = self.state.dps
+        #if reward > self._bestDPS:
+            #self._bestDPS = reward
+            #print("Best reward: " + str(reward))
         return reward
 
     def get_metadata(self):
@@ -75,6 +94,7 @@ class WoWSimsEnv(gym.Env):
         return self._get_obs()
 
     def render(self, mode='human'):
+        self._render = True
         return
 
     def close(self):

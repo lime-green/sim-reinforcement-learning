@@ -37,6 +37,9 @@ class State:
     @property
     def is_done(self):
         return self._raw_state["isDone"]
+    @property
+    def damage(self):
+        return self._raw_state["totalDamage"]
 
     def can_cast(self, spell):
         return self._abilities_map[spell]["canCast"]
