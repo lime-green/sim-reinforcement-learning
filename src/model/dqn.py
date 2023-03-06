@@ -4,8 +4,6 @@ import numpy as np
 import torch as th
 from gym import spaces
 from stable_baselines3 import DQN
-from stable_baselines3.common.preprocessing import maybe_transpose
-from stable_baselines3.common.utils import is_vectorized_observation
 from stable_baselines3.common.vec_env import VecEnv
 from stable_baselines3.dqn import MlpPolicy
 from stable_baselines3.dqn.policies import QNetwork

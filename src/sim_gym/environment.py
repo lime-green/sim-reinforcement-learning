@@ -43,9 +43,8 @@ class WoWSimsEnv(gym.Env):
 
         reward = self.calculate_reward()
 
-        if self._print and num < 14:
-            print(SPELLS[int(num)])
-            print(reward)
+        if self._print:
+            print(action, reward)
 
         done = self.state.is_done
         obs = self._get_obs()
