@@ -37,8 +37,8 @@ def create_single_env(env_kwargs):
 def learn():
     best = 0
     j = 0
-    model_load_path = f"./models/best-{model.__class__.__name__}"
-    for i in range(1000):
+    model_load_path = f"./models/best-MaskedDQN"
+    for i in range(60):
         env_kwargs = dict(sim_duration=20, reward_type="delta_damage", mask_invalid_actions=True, print=False)
         env = create_multi_env(4, env_kwargs)
         #env = create_single_env(env_kwargs)
@@ -62,11 +62,12 @@ def learn():
             model.save(model_load_path, exclude=["policy_kwargs"])
             print("Done saving model")
 
-    print("---- Done! Best model was number ", j, " ------")
-    model_load_path = f"./models/{j}-{model.__class__.__name__}"
-    model.load(model_load_path, env=env)
-    model_load_path = f"./models/best-{model.__class__.__name__}"
-    model.save(model_load_path, exclude=["policy_kwargs"])
+    if j>0:
+        print("---- Done! Best model was number ", j, " ------")
+        model_load_path = f"./models/{j}-{model.__class__.__name__}"
+        model.load(model_load_path, env=env)
+        model_load_path = f"./models/best-{model.__class__.__name__}"
+        model.save(model_load_path, exclude=["policy_kwargs"])
 
 if __name__ == "__main__":
     learn()
