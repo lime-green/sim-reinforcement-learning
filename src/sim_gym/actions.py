@@ -17,6 +17,10 @@ class Action:
 class CastAction(Action):
     spell: str
 
+    @property
+    def name(self):
+        return f"CAST_{self.spell}"
+
     def do(self, agent: SimAgent, state: State):
         return agent.cast(self.spell)
 
@@ -25,8 +29,8 @@ class CastAction(Action):
 
 
 class WaitDuration(Action):
-    ACTION_NAME: str = "WAIT_DURATION"
     DURATION = None
+    name = "WAIT_DURATION"
 
     def do(self, agent: SimAgent, state: State):
         return agent.wait(self.DURATION)
@@ -35,10 +39,12 @@ class WaitDuration(Action):
 class Wait50(WaitDuration):
     """Wait 50ms"""
     DURATION = 50
+    name = "WAIT_50"
 
 
 class WaitGCD(WaitDuration):
     """Wait until GCD is ready"""
+    name = "WAIT_GCD"
 
     def can_do(self, state: State):
         return state.gcd_remaining > 0

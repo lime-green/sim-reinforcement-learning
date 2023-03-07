@@ -25,6 +25,7 @@ def create_multi_env(num_envs, env_kwargs):
         create_env,
         n_envs=num_envs,
         vec_env_cls=SubprocVecEnv,
+        vec_env_kwargs=dict(start_method="fork"),
         env_kwargs=env_kwargs,
     )
 

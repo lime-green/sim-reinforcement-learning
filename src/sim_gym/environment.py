@@ -5,11 +5,10 @@ from agent.sim_agent import SimAgent
 from agent.sim_config import create_config
 from sim_gym.actions import ACTION_SPACE, Action
 from sim_gym.state import State
-from sim_gym.constants import SPELLS
 
 
 class WoWSimsEnv(gym.Env):
-    def __init__(self, sim_duration, reward_type: str = "final_dps", mask_invalid_actions: bool = True, print=True):
+    def __init__(self, sim_duration, reward_type: str = "final_dps", mask_invalid_actions: bool = True, print=False):
         self.action_space = gym.spaces.Discrete(len(ACTION_SPACE))
         self.observation_space = State.get_observation_space()
         self.state = None
@@ -22,11 +21,10 @@ class WoWSimsEnv(gym.Env):
         self._sim_duration = sim_duration
         self._last_dps = 0
         self._last_damage = 0
-        self._totalDamage = 0
+        self._best_damage = 0
 
     def step(self, action):
         assert self.action_space.contains(action), "%r invalid" % action
-        num = int(action)
 
         self._steps += 1
         action: Action = ACTION_SPACE[action]
@@ -45,36 +43,36 @@ class WoWSimsEnv(gym.Env):
         reward = self.calculate_reward()
 
         if True: #self._print:
-            if "Wait50" in str(action):
+            if hasattr(action, "spell"):
+                self._commands += action.spell + " " + str(math.floor(reward))+ " >"
+            elif "Wait50" in str(action):
                 a=1
                 #print(">Wait50", math.floor(reward), end = '')
             elif "WaitGCD" in str(action):
                 a=1
                 #print(">GCD", math.floor(reward), end = '')
-            else:
-                self._commands = self._commands + str(str(action).replace("CastAction(spell='", "")).replace("')"," ") + str(math.floor(reward))+ " >"
         done = self.state.is_done
+
         obs = self._get_obs()
         self._last_dps = self.state.dps
         self._last_damage = self.state.damage
 
-        if self.state.is_done and self._totalDamage < self.state.damage:
-            self._last_damage = 0
-            self._totalDamage = self.state.damage
+        if self.state.is_done and self._best_damage < self.state.damage:
+            self._best_damage = self.state.damage
             print("New best found:")
             print(self._commands)
-            print("total = ", self._totalDamage)
+            print("total = ", self._best_damage)
             print("---------------------------------------------------------------------")
             print(" ")
-        elif self.state.is_done:
-            self._last_damage = 0
-            self._commands = ""
         return obs, reward, done, self.get_metadata()
 
     def calculate_reward(self):
         reward = 0
         if self._reward_type == "delta_dps":
-            reward = self.state.dps - self._last_dps
+            if self.state.is_done:
+                reward = self.state.dps
+            else:
+                reward = self.state.dps - self._last_dps
         elif self._reward_type == "delta_damage":
             if self.state.is_done:
                 reward = self.state.damage
@@ -101,7 +99,9 @@ class WoWSimsEnv(gym.Env):
         state = self._sim_agent.reset(sim_config)
         self.state = State(state)
         self._last_dps = 0
+        self._last_damage = 0
         self._steps = 0
+        self._commands = ""
 
         return self._get_obs()
 
@@ -113,10 +113,14 @@ class WoWSimsEnv(gym.Env):
         self._sim_agent.close()
 
     def sample_possible_actions(self):
-        return np.random.choice([i for i, mask in enumerate(self.action_masks()) if mask])
+        if self._mask_invalid_actions:
+            return np.random.choice([i for i, mask in enumerate(self.action_masks()) if mask])
+        return np.random.choice(len(ACTION_SPACE))
 
     def action_masks(self):
-        return np.array([action.can_do(self.state) for action in ACTION_SPACE])
+        if self._mask_invalid_actions:
+            return np.array([action.can_do(self.state) for action in ACTION_SPACE])
+        return np.ones(len(ACTION_SPACE))
 
     def _get_obs(self):
         return self.state.get_observations()
