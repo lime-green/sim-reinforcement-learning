@@ -43,10 +43,8 @@ def learn():
         env = create_multi_env(4, env_kwargs)
         #env = create_single_env(env_kwargs)
         model = MaskedDQN(MaskedPolicy, env, verbose=0)
-        #model = MaskablePPO("MlpPolicy", env, verbose=1)
-        #model = PPO("MlpPolicy", env, verbose=1)
-        if j>0:
-            model_load_path = f"./models/{j}-{model.__class__.__name__}"
+        #if j>0:
+        model_load_path = f"./models/{j}-{model.__class__.__name__}"
         if os.path.exists(f"{model_load_path}.zip"):
             print("Loading existing model...")
             model.load(model_load_path, env=env)
