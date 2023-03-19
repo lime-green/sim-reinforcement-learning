@@ -42,7 +42,7 @@ requirements.txt: requirements.in
 	$(VENV_ACTIVATE) && ${VENV_NAME}/bin/pip-compile --output-file=requirements.txt requirements.in
 
 run: venv
-	$(VENV_ACTIVATE) && ${PYTHON} src/agent/sim_agent.py 1234
+	$(VENV_ACTIVATE) && ${PYTHON} src/agent/sim_agent.py /tmp/sim-agent.sock
 
 learn: venv
 	$(VENV_ACTIVATE) && ${PYTHON} src/model/learn.py

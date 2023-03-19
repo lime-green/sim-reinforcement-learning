@@ -140,7 +140,8 @@ class SimAgent:
 
 
 if __name__ == "__main__":
-    agent = SimAgent(port=int(sys.argv[1]))
+    agent = SimAgent(port=sys.argv[1])
 
     sim_config = create_config(random_seed=0)
     state = agent.reset(sim_config)
+    print(state)
