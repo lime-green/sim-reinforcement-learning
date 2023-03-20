@@ -23,7 +23,7 @@ class MaskedNetwork(QNetwork):
 
     def _predict(self, observation: th.Tensor, deterministic: bool = True) -> th.Tensor:
         q_values: th.Tensor = self(observation)
-        mask_tensor = th.from_numpy(self.action_masks())
+        mask_tensor = th.from_numpy(self.action_masks()).to(self.device)
 
         # Mask out impossible actions
         q_values = q_values.masked_fill(mask_tensor == False, -np.inf)
