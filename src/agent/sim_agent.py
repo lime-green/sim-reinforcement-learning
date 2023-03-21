@@ -13,10 +13,12 @@ class SimRequest:
         self._body = body
 
     def serialize(self):
-        return orjson.dumps({
-            "command": self._command,
-            "body": self._body,
-        })
+        return orjson.dumps(
+            {
+                "command": self._command,
+                "body": self._body,
+            }
+        )
 
 
 class StartSimSession(SimRequest):
@@ -121,13 +123,19 @@ class SimAgent:
 
     def cast(self, spell):
         response = self._connection.send_request(Cast(spell))
-        self._refetch_state()
+        self._step()
         return response
 
     def wait(self, duration):
         response = self._connection.send_request(WaitDuration(duration))
         self._refetch_state()
         return response
+
+    def _step(self):
+        return self.wait(50)
+
+    def do_nothing(self):
+        return self._step()
 
     def _refetch_state(self):
         self._state = self._connection.send_request(GetState())

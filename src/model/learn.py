@@ -37,13 +37,17 @@ def create_single_env(env_kwargs):
 def learn():
     best = 0
     j = 0
-    model_load_path = f"./models/best-MaskedDQN"
+
     for i in range(60):
-        env_kwargs = dict(sim_duration=20, reward_type="delta_damage", mask_invalid_actions=True, print=False)
+        env_kwargs = dict(
+            sim_duration=60,
+            reward_type="delta_damage",
+            mask_invalid_actions=True,
+        )
         env = create_multi_env(4, env_kwargs)
-        #env = create_single_env(env_kwargs)
-        model = MaskedDQN(MaskedPolicy, env, verbose=0)
-        #if j>0:
+        # env = create_single_env(env_kwargs)
+        model = MaskedDQN(MaskedPolicy, env, verbose=int(os.environ.get("VERBOSE", 0)))
+
         model_load_path = f"./models/{j}-{model.__class__.__name__}"
         if os.path.exists(f"{model_load_path}.zip"):
             print("Loading existing model...")
@@ -51,8 +55,15 @@ def learn():
             print("Done loading model")
 
         model.learn(total_timesteps=500000, progress_bar=True)
-        current = evaluate_policy(model, model.env, n_eval_episodes=120, deterministic=True, callback=policy_callback, render=False)
-        if current[1]>best:
+        current = evaluate_policy(
+            model,
+            model.env,
+            n_eval_episodes=120,
+            deterministic=True,
+            callback=policy_callback,
+            render=False,
+        )
+        if current[1] > best:
             best = current[1]
             j = i
             model_load_path = f"./models/{j}-{model.__class__.__name__}"
@@ -60,12 +71,13 @@ def learn():
             model.save(model_load_path, exclude=["policy_kwargs"])
             print("Done saving model")
 
-    if j>0:
+    if j > 0:
         print("---- Done! Best model was number ", j, " ------")
         model_load_path = f"./models/{j}-{model.__class__.__name__}"
         model.load(model_load_path, env=env)
         model_load_path = f"./models/best-{model.__class__.__name__}"
         model.save(model_load_path, exclude=["policy_kwargs"])
+
 
 if __name__ == "__main__":
     learn()

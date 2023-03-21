@@ -8,7 +8,12 @@ from sim_gym.state import State
 
 
 class WoWSimsEnv(gym.Env):
-    def __init__(self, sim_duration, reward_type: str = "final_dps", mask_invalid_actions: bool = True, print=False):
+    def __init__(
+        self,
+        sim_duration,
+        reward_type: str = "final_dps",
+        mask_invalid_actions: bool = True,
+    ):
         self.action_space = gym.spaces.Discrete(len(ACTION_SPACE))
         self.observation_space = State.get_observation_space()
         self.state = None
@@ -16,7 +21,6 @@ class WoWSimsEnv(gym.Env):
         self._reward_type = reward_type
         self._mask_invalid_actions = mask_invalid_actions
         self._steps = 0
-        self._print = print
         self._commands = ""
         self._sim_duration = sim_duration
         self._last_dps = 0
@@ -42,15 +46,14 @@ class WoWSimsEnv(gym.Env):
 
         reward = self.calculate_reward()
 
-        if True: #self._print:
-            if hasattr(action, "spell"):
-                self._commands += action.spell + " " + str(math.floor(reward))+ " >"
-            elif "Wait50" in str(action):
-                a=1
-                #print(">Wait50", math.floor(reward), end = '')
-            elif "WaitGCD" in str(action):
-                a=1
-                #print(">GCD", math.floor(reward), end = '')
+        if hasattr(action, "spell"):
+            self._commands += action.spell + " " + str(math.floor(reward)) + " >"
+        elif "Wait50" in str(action):
+            pass
+            # print(">Wait50", math.floor(reward), end = '')
+        elif "WaitGCD" in str(action):
+            pass
+            # print(">GCD", math.floor(reward), end = '')
         done = self.state.is_done
 
         obs = self._get_obs()
@@ -62,7 +65,9 @@ class WoWSimsEnv(gym.Env):
             print("New best found:")
             print(self._commands)
             print("total = ", self._best_damage)
-            print("---------------------------------------------------------------------")
+            print(
+                "---------------------------------------------------------------------"
+            )
             print(" ")
         return obs, reward, done, self.get_metadata()
 
@@ -89,7 +94,11 @@ class WoWSimsEnv(gym.Env):
         return reward
 
     def get_metadata(self):
-        return {"dps": self.state.dps, "is_success": self.state.is_done, "steps": self._steps}
+        return {
+            "dps": self.state.dps,
+            "is_success": self.state.is_done,
+            "steps": self._steps,
+        }
 
     def reset(self, seed=None, options=None):
         sim_config = create_config(
@@ -105,8 +114,7 @@ class WoWSimsEnv(gym.Env):
 
         return self._get_obs()
 
-    def render(self, mode='ascii'):
-        self._print = True
+    def render(self, mode="ascii"):
         pass
 
     def close(self):
@@ -114,7 +122,9 @@ class WoWSimsEnv(gym.Env):
 
     def sample_possible_actions(self):
         if self._mask_invalid_actions:
-            return np.random.choice([i for i, mask in enumerate(self.action_masks()) if mask])
+            return np.random.choice(
+                [i for i, mask in enumerate(self.action_masks()) if mask]
+            )
         return np.random.choice(len(ACTION_SPACE))
 
     def action_masks(self):

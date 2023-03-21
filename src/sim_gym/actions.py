@@ -36,14 +36,14 @@ class WaitDuration(Action):
         return agent.wait(self.DURATION)
 
 
-class Wait50(WaitDuration):
-    """Wait 50ms"""
-    DURATION = 50
-    name = "WAIT_50"
+class DoNothing(Action):
+    def do(self, agent: SimAgent, state: State):
+        return agent.do_nothing()
 
 
 class WaitGCD(WaitDuration):
     """Wait until GCD is ready"""
+
     name = "WAIT_GCD"
 
     def can_do(self, state: State):
@@ -53,45 +53,10 @@ class WaitGCD(WaitDuration):
         return agent.wait(state.gcd_remaining)
 
 
-cast_actions = [
-    CastAction(spell)
-    for spell in SPELLS
-]
-cast_actions2 = [
-    CastAction("Pestilence"),
-    CastAction("BloodStrike"),
-    CastAction("PlagueStrike"),
-    CastAction("IcyTouch"),
-    CastAction("Obliterate"),
-    CastAction("HowlingBlast"),
-    CastAction("FrostStrike"),
-]
+cast_actions = [CastAction(spell) for spell in SPELLS]
+
 wait_actions = [
-    Wait50(),
-    WaitGCD(),
-]
-wait_actions2 = [
-    #Wait50(),
-    WaitGCD(),
+    DoNothing(),
 ]
 
 ACTION_SPACE = cast_actions + wait_actions
-ACTION_SPACE2 = cast_actions2 + wait_actions2
-
-
-##SPELLS = [
- #   "Pestilence",
- #   "BloodStrike",
- #   "PlagueStrike",
- #   "IcyTouch",
- #   "HornOfWinter",
- #   "Obliterate",
- #   "HowlingBlast",
- #   "FrostStrike",
-  #  "EmpowerRuneWeapon",
- #   "RaiseDead",
- #   "UnbreakableArmor",
- #   "BloodTap",
- #   "BloodFury",
- #   "HyperspeedAcceleration",
-#]

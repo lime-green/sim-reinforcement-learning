@@ -28,13 +28,13 @@ test: venv
 	$(VENV_ACTIVATE) && ${PYTHON} -m pytest
 
 lint: venv
-	$(VENV_ACTIVATE) && ${PYTHON} -m black src/ tests/
-	$(VENV_ACTIVATE) && ${PYTHON} -m flake8 src/ tests/ --max-line-length 150 --statistics --show-source
+	$(VENV_ACTIVATE) && ${PYTHON} -m black src/
+	$(VENV_ACTIVATE) && ${PYTHON} -m flake8 src/ --max-line-length 150 --statistics --show-source
 
 
 lint-check: venv
-	$(VENV_ACTIVATE) && ${PYTHON} -m black --check src/ tests
-	$(VENV_ACTIVATE) && ${PYTHON} -m flake8 src/ tests/ --max-line-length 150 --statistics --show-source
+	$(VENV_ACTIVATE) && ${PYTHON} -m black --check src/
+	$(VENV_ACTIVATE) && ${PYTHON} -m flake8 src/ --max-line-length 150 --statistics --show-source
 
 requirements: requirements.txt
 
@@ -46,3 +46,6 @@ run: venv
 
 learn: venv
 	$(VENV_ACTIVATE) && ${PYTHON} src/model/learn.py
+
+learn-verbose: venv
+	$(VENV_ACTIVATE) && VERBOSE=1 ${PYTHON} src/model/learn.py

@@ -11,119 +11,27 @@ SIM_CONFIG = {
                         "class": "ClassDeathknight",
                         "equipment": {
                             "items": [
-                                {
-                                    "id": 46115,
-                                    "enchant": 3817,
-                                    "gems": [
-                                        41398,
-                                        42702
-                                    ]
-                                },
-                                {
-                                    "id": 45459,
-                                    "gems": [
-                                        39996
-                                    ]
-                                },
-                                {
-                                    "id": 46117,
-                                    "enchant": 3808,
-                                    "gems": [
-                                        39996
-                                    ]
-                                },
-                                {
-                                    "id": 46032,
-                                    "enchant": 3831,
-                                    "gems": [
-                                        39996,
-                                        39996
-                                    ]
-                                },
-                                {
-                                    "id": 46111,
-                                    "enchant": 3832,
-                                    "gems": [
-                                        42142,
-                                        42142
-                                    ]
-                                },
-                                {
-                                    "id": 45663,
-                                    "enchant": 3845,
-                                    "gems": [
-                                        39996,
-                                        0
-                                    ]
-                                },
-                                {
-                                    "id": 46113,
-                                    "enchant": 3604,
-                                    "gems": [
-                                        39996,
-                                        0
-                                    ]
-                                },
-                                {
-                                    "id": 45241,
-                                    "gems": [
-                                        42142,
-                                        45862,
-                                        39996
-                                    ]
-                                },
+                                {"id": 46115, "enchant": 3817, "gems": [41398, 42702]},
+                                {"id": 45459, "gems": [39996]},
+                                {"id": 46117, "enchant": 3808, "gems": [39996]},
+                                {"id": 46032, "enchant": 3831, "gems": [39996, 39996]},
+                                {"id": 46111, "enchant": 3832, "gems": [42142, 42142]},
+                                {"id": 45663, "enchant": 3845, "gems": [39996, 0]},
+                                {"id": 46113, "enchant": 3604, "gems": [39996, 0]},
+                                {"id": 45241, "gems": [42142, 45862, 39996]},
                                 {
                                     "id": 45134,
                                     "enchant": 3823,
-                                    "gems": [
-                                        39996,
-                                        39996,
-                                        39996
-                                    ]
+                                    "gems": [39996, 39996, 39996],
                                 },
-                                {
-                                    "id": 45599,
-                                    "enchant": 3606,
-                                    "gems": [
-                                        39996,
-                                        39996
-                                    ]
-                                },
-                                {
-                                    "id": 45608,
-                                    "gems": [
-                                        39996
-                                    ]
-                                },
-                                {
-                                    "id": 45534,
-                                    "gems": [
-                                        39996
-                                    ]
-                                },
-                                {
-                                    "id": 45931
-                                },
-                                {
-                                    "id": 42987
-                                },
-                                {
-                                    "id": 46097,
-                                    "enchant": 3370,
-                                    "gems": [
-                                        39996
-                                    ]
-                                },
-                                {
-                                    "id": 46097,
-                                    "enchant": 3368,
-                                    "gems": [
-                                        39996
-                                    ]
-                                },
-                                {
-                                    "id": 40207
-                                }
+                                {"id": 45599, "enchant": 3606, "gems": [39996, 39996]},
+                                {"id": 45608, "gems": [39996]},
+                                {"id": 45534, "gems": [39996]},
+                                {"id": 45931},
+                                {"id": 42987},
+                                {"id": 46097, "enchant": 3370, "gems": [39996]},
+                                {"id": 46097, "enchant": 3368, "gems": [39996]},
+                                {"id": 40207},
                             ]
                         },
                         "consumes": {
@@ -133,7 +41,7 @@ SIM_CONFIG = {
                             "defaultPotion": "PotionOfSpeed",
                             "prepopPotion": "PotionOfSpeed",
                             "thermalSapper": True,
-                            "fillerExplosive": "ExplosiveSaroniteBomb"
+                            "fillerExplosive": "ExplosiveSaroniteBomb",
                         },
                         "bonusStats": {
                             "stats": [
@@ -171,20 +79,13 @@ SIM_CONFIG = {
                                 0,
                                 0,
                                 0,
-                                0
+                                0,
                             ],
-                            "pseudoStats": [
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0
-                            ]
+                            "pseudoStats": [0, 0, 0, 0, 0, 0],
                         },
                         "buffs": {
                             "blessingOfKings": True,
-                            "blessingOfMight": "TristateEffectImproved"
+                            "blessingOfMight": "TristateEffectImproved",
                         },
                         "talentsString": "23050005-32005350352203012300033101351",
                         "glyphs": {
@@ -193,7 +94,7 @@ SIM_CONFIG = {
                             "major3": 45805,
                             "minor1": 43544,
                             "minor2": 43672,
-                            "minor3": 43673
+                            "minor3": 43673,
                         },
                         "profession1": "Engineering",
                         "profession2": "Jewelcrafting",
@@ -241,12 +142,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
-                                    "gemSockets": [
-                                        "GemColorMeta",
-                                        "GemColorBlue"
-                                    ],
+                                    "gemSockets": ["GemColorMeta", "GemColorBlue"],
                                     "socketBonus": [
                                         0,
                                         0,
@@ -282,9 +180,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
-                                    "setName": "Darkruned Battlegear"
+                                    "setName": "Darkruned Battlegear",
                                 },
                                 {
                                     "id": 45459,
@@ -325,11 +223,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
-                                    "gemSockets": [
-                                        "GemColorBlue"
-                                    ],
+                                    "gemSockets": ["GemColorBlue"],
                                     "socketBonus": [
                                         4,
                                         0,
@@ -365,8 +261,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 46117,
@@ -408,11 +304,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
-                                    "gemSockets": [
-                                        "GemColorBlue"
-                                    ],
+                                    "gemSockets": ["GemColorBlue"],
                                     "socketBonus": [
                                         0,
                                         0,
@@ -448,9 +342,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
-                                    "setName": "Darkruned Battlegear"
+                                    "setName": "Darkruned Battlegear",
                                 },
                                 {
                                     "id": 46032,
@@ -491,12 +385,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
-                                    "gemSockets": [
-                                        "GemColorRed",
-                                        "GemColorYellow"
-                                    ],
+                                    "gemSockets": ["GemColorRed", "GemColorYellow"],
                                     "socketBonus": [
                                         0,
                                         6,
@@ -532,8 +423,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 46111,
@@ -575,12 +466,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
-                                    "gemSockets": [
-                                        "GemColorYellow",
-                                        "GemColorBlue"
-                                    ],
+                                    "gemSockets": ["GemColorYellow", "GemColorBlue"],
                                     "socketBonus": [
                                         0,
                                         0,
@@ -616,9 +504,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
-                                    "setName": "Darkruned Battlegear"
+                                    "setName": "Darkruned Battlegear",
                                 },
                                 {
                                     "id": 45663,
@@ -660,11 +548,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
-                                    "gemSockets": [
-                                        "GemColorRed"
-                                    ],
+                                    "gemSockets": ["GemColorRed"],
                                     "socketBonus": [
                                         0,
                                         0,
@@ -700,8 +586,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 46113,
@@ -743,11 +629,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
-                                    "gemSockets": [
-                                        "GemColorBlue"
-                                    ],
+                                    "gemSockets": ["GemColorBlue"],
                                     "socketBonus": [
                                         0,
                                         0,
@@ -783,9 +667,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
-                                    "setName": "Darkruned Battlegear"
+                                    "setName": "Darkruned Battlegear",
                                 },
                                 {
                                     "id": 45241,
@@ -827,12 +711,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
-                                    "gemSockets": [
-                                        "GemColorBlue",
-                                        "GemColorYellow"
-                                    ],
+                                    "gemSockets": ["GemColorBlue", "GemColorYellow"],
                                     "socketBonus": [
                                         6,
                                         0,
@@ -868,8 +749,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 45134,
@@ -911,12 +792,12 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
                                     "gemSockets": [
                                         "GemColorYellow",
                                         "GemColorRed",
-                                        "GemColorBlue"
+                                        "GemColorBlue",
                                     ],
                                     "socketBonus": [
                                         8,
@@ -953,8 +834,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 45599,
@@ -996,12 +877,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
-                                    "gemSockets": [
-                                        "GemColorYellow",
-                                        "GemColorBlue"
-                                    ],
+                                    "gemSockets": ["GemColorYellow", "GemColorBlue"],
                                     "socketBonus": [
                                         4,
                                         0,
@@ -1037,8 +915,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 45608,
@@ -1079,11 +957,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
-                                    "gemSockets": [
-                                        "GemColorBlue"
-                                    ],
+                                    "gemSockets": ["GemColorBlue"],
                                     "socketBonus": [
                                         0,
                                         4,
@@ -1119,8 +995,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 45534,
@@ -1161,11 +1037,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
-                                    "gemSockets": [
-                                        "GemColorBlue"
-                                    ],
+                                    "gemSockets": ["GemColorBlue"],
                                     "socketBonus": [
                                         4,
                                         0,
@@ -1201,8 +1075,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 45931,
@@ -1243,7 +1117,7 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
                                     "socketBonus": [
                                         0,
@@ -1280,8 +1154,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 42987,
@@ -1322,7 +1196,7 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
                                     "socketBonus": [
                                         0,
@@ -1359,8 +1233,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 46097,
@@ -1403,11 +1277,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
-                                    "gemSockets": [
-                                        "GemColorRed"
-                                    ],
+                                    "gemSockets": ["GemColorRed"],
                                     "socketBonus": [
                                         0,
                                         0,
@@ -1443,11 +1315,11 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
                                     "weaponDamageMin": 371,
                                     "weaponDamageMax": 690,
-                                    "weaponSpeed": 2.7
+                                    "weaponSpeed": 2.7,
                                 },
                                 {
                                     "id": 46097,
@@ -1490,11 +1362,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
-                                    "gemSockets": [
-                                        "GemColorRed"
-                                    ],
+                                    "gemSockets": ["GemColorRed"],
                                     "socketBonus": [
                                         0,
                                         0,
@@ -1530,11 +1400,11 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
                                     "weaponDamageMin": 371,
                                     "weaponDamageMax": 690,
-                                    "weaponSpeed": 2.7
+                                    "weaponSpeed": 2.7,
                                 },
                                 {
                                     "id": 40207,
@@ -1576,7 +1446,7 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
+                                        0,
                                     ],
                                     "socketBonus": [
                                         0,
@@ -1613,9 +1483,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
-                                }
+                                        0,
+                                    ],
+                                },
                             ],
                             "enchants": [
                                 {
@@ -1660,8 +1530,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "effectId": 3808,
@@ -1705,8 +1575,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "effectId": 3831,
@@ -1750,8 +1620,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "effectId": 3832,
@@ -1795,8 +1665,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "effectId": 3845,
@@ -1840,8 +1710,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "effectId": 3604,
@@ -1885,8 +1755,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "effectId": 3823,
@@ -1930,8 +1800,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "effectId": 3606,
@@ -1975,8 +1845,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "effectId": 3370,
@@ -2020,8 +1890,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "effectId": 3368,
@@ -2065,9 +1935,9 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
-                                }
+                                        0,
+                                    ],
+                                },
                             ],
                             "gems": [
                                 {
@@ -2109,8 +1979,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 42702,
@@ -2151,8 +2021,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 39996,
@@ -2193,8 +2063,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 39996,
@@ -2235,8 +2105,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 39996,
@@ -2277,8 +2147,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 39996,
@@ -2319,8 +2189,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 42142,
@@ -2361,8 +2231,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 42142,
@@ -2403,8 +2273,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 39996,
@@ -2445,8 +2315,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 39996,
@@ -2487,8 +2357,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 42142,
@@ -2529,8 +2399,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 45862,
@@ -2571,8 +2441,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 39996,
@@ -2613,8 +2483,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 39996,
@@ -2655,8 +2525,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 39996,
@@ -2697,8 +2567,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 39996,
@@ -2739,8 +2609,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 39996,
@@ -2781,8 +2651,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 39996,
@@ -2823,8 +2693,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 39996,
@@ -2865,8 +2735,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 39996,
@@ -2907,8 +2777,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 39996,
@@ -2949,8 +2819,8 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
+                                        0,
+                                    ],
                                 },
                                 {
                                     "id": 39996,
@@ -2991,10 +2861,10 @@ SIM_CONFIG = {
                                         0,
                                         0,
                                         0,
-                                        0
-                                    ]
-                                }
-                            ]
+                                        0,
+                                    ],
+                                },
+                            ],
                         },
                         "deathknight": {
                             "rotation": {
@@ -3007,95 +2877,30 @@ SIM_CONFIG = {
                                 "holdErwArmy": True,
                                 "useGargoyle": True,
                                 "gargoylePresence": "Unholy",
-                                "drwDiseases": "Pestilence"
+                                "drwDiseases": "Pestilence",
                             },
                             "options": {
                                 "petUptime": 1,
                                 "precastHornOfWinter": True,
-                                "unholyFrenzyTarget": {
-                                    "targetIndex": -1
-                                },
-                                "drwPestiApply": True
-                            }
-                        }
+                                "unholyFrenzyTarget": {"targetIndex": -1},
+                                "drwPestiApply": True,
+                            },
+                        },
                     },
                     {},
                     {},
                     {},
-                    {}
+                    {},
                 ],
-                "buffs": {}
+                "buffs": {},
             },
-            {
-                "players": [
-                    {},
-                    {},
-                    {},
-                    {},
-                    {}
-                ],
-                "buffs": {}
-            },
-            {
-                "players": [
-                    {},
-                    {},
-                    {},
-                    {},
-                    {}
-                ],
-                "buffs": {}
-            },
-            {
-                "players": [
-                    {},
-                    {},
-                    {},
-                    {},
-                    {}
-                ],
-                "buffs": {}
-            },
-            {
-                "players": [
-                    {},
-                    {},
-                    {},
-                    {},
-                    {}
-                ],
-                "buffs": {}
-            },
-            {
-                "players": [
-                    {},
-                    {},
-                    {},
-                    {},
-                    {}
-                ],
-                "buffs": {}
-            },
-            {
-                "players": [
-                    {},
-                    {},
-                    {},
-                    {},
-                    {}
-                ],
-                "buffs": {}
-            },
-            {
-                "players": [
-                    {},
-                    {},
-                    {},
-                    {},
-                    {}
-                ],
-                "buffs": {}
-            }
+            {"players": [{}, {}, {}, {}, {}], "buffs": {}},
+            {"players": [{}, {}, {}, {}, {}], "buffs": {}},
+            {"players": [{}, {}, {}, {}, {}], "buffs": {}},
+            {"players": [{}, {}, {}, {}, {}], "buffs": {}},
+            {"players": [{}, {}, {}, {}, {}], "buffs": {}},
+            {"players": [{}, {}, {}, {}, {}], "buffs": {}},
+            {"players": [{}, {}, {}, {}, {}], "buffs": {}},
         ],
         "numActiveParties": 5,
         "buffs": {
@@ -3112,7 +2917,7 @@ SIM_CONFIG = {
             "sanctifiedRetribution": True,
             "bloodlust": True,
             "devotionAura": "TristateEffectImproved",
-            "stoneskinTotem": "TristateEffectImproved"
+            "stoneskinTotem": "TristateEffectImproved",
         },
         "debuffs": {
             "faerieFire": "TristateEffectImproved",
@@ -3122,8 +2927,8 @@ SIM_CONFIG = {
             "shadowMastery": True,
             "bloodFrenzy": True,
             "mangle": True,
-            "sunderArmor": True
-        }
+            "sunderArmor": True,
+        },
     },
     "encounter": {
         "duration": 180,
@@ -3170,19 +2975,15 @@ SIM_CONFIG = {
                     0,
                     0,
                     0,
-                    0
+                    0,
                 ],
                 "minBaseDamage": 65000,
                 "swingSpeed": 1.5,
-                "parryHaste": True
+                "parryHaste": True,
             }
-        ]
+        ],
     },
-    "simOptions": {
-        "iterations": 3000,
-        "randomSeed": 0,
-        "debugFirstIteration": True
-    }
+    "simOptions": {"iterations": 3000, "randomSeed": 0, "debugFirstIteration": True},
 }
 
 

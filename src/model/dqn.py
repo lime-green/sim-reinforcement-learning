@@ -35,7 +35,9 @@ class MaskedNetwork(QNetwork):
 
 class MaskedDQN(DQN):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs, policy_kwargs={"action_masks": self.action_masks})
+        super().__init__(
+            *args, **kwargs, policy_kwargs={"action_masks": self.action_masks}
+        )
 
     def action_masks(self):
         if isinstance(self.env, VecEnv):
@@ -59,16 +61,20 @@ class MaskedDQN(DQN):
         if not deterministic and np.random.rand() < self.exploration_rate:
             action = self.sample_possible_actions()
         else:
-            action, state = self.policy.predict(observation, state, episode_start, deterministic)
+            action, state = self.policy.predict(
+                observation, state, episode_start, deterministic
+            )
         return action, state
 
     def _sample_action(
         self,
         learning_starts: int,
-        action_noise = None,
+        action_noise=None,
         n_envs: int = 1,
     ) -> Tuple[np.ndarray, np.ndarray]:
-        if self.num_timesteps < learning_starts and not (self.use_sde and self.use_sde_at_warmup):
+        if self.num_timesteps < learning_starts and not (
+            self.use_sde and self.use_sde_at_warmup
+        ):
             unscaled_action = self.sample_possible_actions()
         else:
             unscaled_action, _ = self.predict(self._last_obs, deterministic=False)
@@ -94,5 +100,7 @@ class MaskedPolicy(MlpPolicy):
 
     def make_q_net(self) -> MaskedNetwork:
         # Make sure we always have separate networks for features extractors etc
-        net_args = self._update_features_extractor(self.net_args, features_extractor=None)
+        net_args = self._update_features_extractor(
+            self.net_args, features_extractor=None
+        )
         return MaskedNetwork(action_masks=self.action_masks, **net_args).to(self.device)

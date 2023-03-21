@@ -37,5 +37,3 @@ RUNE_TYPE_MAP = {
     "Unholy": 2,
     "Death": 3,
 }
-
-

@@ -1,7 +1,7 @@
 import json
 
 import numpy as np
-from gym.spaces import Dict, Discrete, Box, MultiBinary, Space
+from gym.spaces import Dict, Discrete, Box, MultiBinary
 
 from .constants import BUFFS, DEBUFFS, SPELLS, RUNE_TYPE_MAP
 
@@ -18,13 +18,9 @@ class State:
             if ability["name"] in SPELL_SET
         }
         self._debuffs_map = {
-            debuff["name"]: debuff
-            for debuff in self._raw_state["debuffs"]
+            debuff["name"]: debuff for debuff in self._raw_state["debuffs"]
         }
-        self._buffs_map = {
-            buff["name"]: buff
-            for buff in self._raw_state["buffs"]
-        }
+        self._buffs_map = {buff["name"]: buff for buff in self._raw_state["buffs"]}
 
     @property
     def gcd_remaining(self):
@@ -37,6 +33,7 @@ class State:
     @property
     def is_done(self):
         return self._raw_state["isDone"]
+
     @property
     def damage(self):
         return self._raw_state["totalDamage"]
@@ -45,23 +42,24 @@ class State:
         return self._abilities_map[spell]["canCast"]
 
     def get_observations(self):
-        from gym.spaces.utils import flatten_space
         return {
             # Discrete
             "isExecute35": self._raw_state["isExecute35"],
             "runeTypes": [RUNE_TYPE_MAP[rt] for rt in self._raw_state["runeTypes"]],
             "abilitiesCanCast": [int(ability["canCast"]) for ability in self.abilities],
-            "debuffsActive": [int(self._debuffs_map[debuff]["isActive"]) for debuff in DEBUFFS],
+            "debuffsActive": [
+                int(self._debuffs_map[debuff]["isActive"]) for debuff in DEBUFFS
+            ],
             "buffsActive": [int(self._buffs_map[buff]["isActive"]) for buff in BUFFS],
             "gcdAvailable": int(self._raw_state["gcdAvailable"]),
-
             # Continuous
             "abilityCDs": [ability["cdRemaining"] for ability in self.abilities],
             "abilityGCDs": [ability["gcdCost"] for ability in self.abilities],
-            "debuffDurations": [self._debuffs_map[debuff]["duration"] for debuff in DEBUFFS],
+            "debuffDurations": [
+                self._debuffs_map[debuff]["duration"] for debuff in DEBUFFS
+            ],
             "buffDurations": [self._buffs_map[buff]["duration"] for buff in BUFFS],
             "gcdRemaining": self.gcd_remaining,
-            "currentTime": self._raw_state["currentTime"],
             "timeRemaining": self._raw_state["timeRemaining"],
             "runeCDs": self._raw_state["runeCDs"],
             "runeGraces": self._raw_state["runeGraces"],
@@ -69,34 +67,41 @@ class State:
 
     @staticmethod
     def get_observation_space():
-        return Dict({
-            # Discrete
-            "isExecute35": Discrete(2),
-            "runeTypes": Box(low=0, high=3, shape=(6,), dtype=np.uint8),
-            "abilitiesCanCast": MultiBinary(len(SPELLS)),
-            "debuffsActive": MultiBinary(len(DEBUFFS)),
-            "buffsActive": MultiBinary(len(BUFFS)),
-            "gcdAvailable": Discrete(2),
-
-            # Continuous
-            "abilityCDs": Box(low=0, high=1000*60*60, shape=(len(SPELLS),), dtype=np.int32),
-            "abilityGCDs": Box(low=0, high=1501, shape=(len(SPELLS),), dtype=np.int32),
-            "debuffDurations": Box(low=0, high=1000*60*60, shape=(len(DEBUFFS),), dtype=np.int32),
-            "buffDurations": Box(low=0, high=1000*60*60, shape=(len(BUFFS),), dtype=np.int32),
-            "gcdRemaining": Box(low=0, high=1500, shape=(1,), dtype=np.int32),
-            "currentTime": Box(low=0, high=1000*60*60, shape=(1,), dtype=np.int32),
-            "timeRemaining": Box(low=0, high=1000*60*60, shape=(1,), dtype=np.int32),
-            "runeCDs": Box(low=0, high=1000*10, shape=(6,), dtype=np.int32),
-            "runeGraces": Box(low=0, high=2500, shape=(6,), dtype=np.int32),
-        })
+        return Dict(
+            {
+                # Discrete
+                "isExecute35": Discrete(2),
+                "runeTypes": Box(low=0, high=3, shape=(6,), dtype=np.uint8),
+                "abilitiesCanCast": MultiBinary(len(SPELLS)),
+                "debuffsActive": MultiBinary(len(DEBUFFS)),
+                "buffsActive": MultiBinary(len(BUFFS)),
+                "gcdAvailable": Discrete(2),
+                # Continuous
+                "abilityCDs": Box(
+                    low=0, high=1000 * 60 * 10, shape=(len(SPELLS),), dtype=np.uint32
+                ),
+                "abilityGCDs": Box(
+                    low=0, high=1500, shape=(len(SPELLS),), dtype=np.uint16
+                ),
+                "debuffDurations": Box(
+                    low=0, high=1000 * 60 * 10, shape=(len(DEBUFFS),), dtype=np.uint32
+                ),
+                "buffDurations": Box(
+                    low=0, high=1000 * 60 * 10, shape=(len(BUFFS),), dtype=np.uint32
+                ),
+                "gcdRemaining": Box(low=0, high=1500, shape=(1,), dtype=np.uint16),
+                "timeRemaining": Box(
+                    low=0, high=1000 * 60 * 10, shape=(1,), dtype=np.uint32
+                ),
+                "runeCDs": Box(low=0, high=1000 * 10, shape=(6,), dtype=np.uint16),
+                "runeGraces": Box(low=0, high=2500, shape=(6,), dtype=np.uint16),
+            }
+        )
 
     @property
     def abilities(self):
         # deterministically order abilities
-        abilities = [
-            self._abilities_map[spell]
-            for spell in SPELLS
-        ]
+        abilities = [self._abilities_map[spell] for spell in SPELLS]
 
         return abilities
 

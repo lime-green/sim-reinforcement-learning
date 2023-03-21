@@ -16,4 +16,6 @@ class MaskablePPO(sb3_contrib.MaskablePPO):
     ) -> Tuple[np.ndarray, Optional[Tuple[np.ndarray, ...]]]:
         if action_masks is None:
             action_masks = get_action_masks(self.env)
-        return self.policy.predict(observation, state, episode_start, deterministic, action_masks=action_masks)
+        return self.policy.predict(
+            observation, state, episode_start, deterministic, action_masks=action_masks
+        )
