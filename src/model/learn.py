@@ -44,7 +44,7 @@ def learn():
             reward_type="delta_damage",
             mask_invalid_actions=True,
         )
-        env = create_multi_env(4, env_kwargs)
+        env = create_multi_env(16, env_kwargs)
         # env = create_single_env(env_kwargs)
         model = MaskedDQN(MaskedPolicy, env, verbose=int(os.environ.get("VERBOSE", 0)))
 
