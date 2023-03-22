@@ -39,12 +39,14 @@ def learn():
     best = 0
     j = 0
 
-    simulation_duration_seconds = 60
+    episode_duration_seconds = 60
     simulation_step_duration_msec = 50
+    steps_per_episode = math.ceil((episode_duration_seconds * 1000) / simulation_step_duration_msec)
+    episodes_per_training_epoch = 500
 
     for i in range(60):
         env_kwargs = dict(
-            sim_duration_seconds=simulation_duration_seconds,
+            sim_duration_seconds=episode_duration_seconds,
             sim_step_duration_msec=simulation_step_duration_msec,
             reward_type="delta_damage",
             mask_invalid_actions=True,
@@ -59,7 +61,7 @@ def learn():
             model.load(model_load_path, env=env)
             print("Done loading model")
 
-        model.learn(total_timesteps=math.ceil((simulation_duration_seconds * 1000) / simulation_step_duration_msec), progress_bar=True)
+        model.learn(total_timesteps=(steps_per_episode * episodes_per_training_epoch), progress_bar=True)
         current = evaluate_policy(
             model,
             model.env,
