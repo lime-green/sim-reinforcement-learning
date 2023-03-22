@@ -105,9 +105,10 @@ class SimConnection:
 
 
 class SimAgent:
-    def __init__(self, port):
+    def __init__(self, port, step_duration_msec):
         self._connection = SimConnection(port)
         self._state = None
+        self._step_duration_msec = step_duration_msec
 
     def close(self):
         self._connection.disconnect()
@@ -133,7 +134,7 @@ class SimAgent:
         return response
 
     def _step(self):
-        return self.wait(50)
+        return self.wait(self._step_duration_msec)
 
     def do_nothing(self):
         return self._step()

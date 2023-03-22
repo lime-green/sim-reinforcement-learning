@@ -10,19 +10,20 @@ from sim_gym.state import State
 class WoWSimsEnv(gym.Env):
     def __init__(
         self,
-        sim_duration,
+        sim_duration_seconds,
+        sim_step_duration_msec,
         reward_type: str = "final_dps",
         mask_invalid_actions: bool = True,
     ):
         self.action_space = gym.spaces.Discrete(len(ACTION_SPACE))
         self.observation_space = State.get_observation_space()
         self.state = None
-        self._sim_agent = SimAgent(port="/tmp/sim-agent.sock")
+        self._sim_agent = SimAgent(port="/tmp/sim-agent.sock", step_duration_msec=sim_step_duration_msec)
         self._reward_type = reward_type
         self._mask_invalid_actions = mask_invalid_actions
         self._steps = 0
         self._commands = ""
-        self._sim_duration = sim_duration
+        self._sim_duration_seconds = sim_duration_seconds
         self._last_dps = 0
         self._last_damage = 0
         self._best_damage = 0
@@ -48,12 +49,7 @@ class WoWSimsEnv(gym.Env):
 
         if hasattr(action, "spell"):
             self._commands += action.spell + " " + str(math.floor(reward)) + " >"
-        elif "Wait50" in str(action):
-            pass
-            # print(">Wait50", math.floor(reward), end = '')
-        elif "WaitGCD" in str(action):
-            pass
-            # print(">GCD", math.floor(reward), end = '')
+
         done = self.state.is_done
 
         obs = self._get_obs()
@@ -103,7 +99,7 @@ class WoWSimsEnv(gym.Env):
     def reset(self, seed=None, options=None):
         sim_config = create_config(
             random_seed=seed,
-            duration=self._sim_duration,
+            duration=self._sim_duration_seconds,
         )
         state = self._sim_agent.reset(sim_config)
         self.state = State(state)
