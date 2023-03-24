@@ -46,7 +46,6 @@ class State:
             # Discrete
             "isExecute35": self._raw_state["isExecute35"],
             "runeTypes": [RUNE_TYPE_MAP[rt] for rt in self._raw_state["runeTypes"]],
-            "abilitiesCanCast": [int(ability["canCast"]) for ability in self.abilities],
             "debuffsActive": [
                 int(self._debuffs_map[debuff]["isActive"]) for debuff in DEBUFFS
             ],
@@ -60,7 +59,6 @@ class State:
             ],
             "buffDurations": [self._buffs_map[buff]["duration"] for buff in BUFFS],
             "gcdRemaining": self.gcd_remaining,
-            "timeRemaining": self._raw_state["timeRemaining"],
             "runeCDs": self._raw_state["runeCDs"],
             "runeGraces": self._raw_state["runeGraces"],
         }
@@ -72,7 +70,6 @@ class State:
                 # Discrete
                 "isExecute35": Discrete(2),
                 "runeTypes": Box(low=0, high=3, shape=(6,), dtype=np.uint8),
-                "abilitiesCanCast": MultiBinary(len(SPELLS)),
                 "debuffsActive": MultiBinary(len(DEBUFFS)),
                 "buffsActive": MultiBinary(len(BUFFS)),
                 "gcdAvailable": Discrete(2),
@@ -90,9 +87,6 @@ class State:
                     low=0, high=1000 * 60 * 10, shape=(len(BUFFS),), dtype=np.uint32
                 ),
                 "gcdRemaining": Box(low=0, high=1500, shape=(1,), dtype=np.uint16),
-                "timeRemaining": Box(
-                    low=0, high=1000 * 60 * 10, shape=(1,), dtype=np.uint32
-                ),
                 "runeCDs": Box(low=0, high=1000 * 10, shape=(6,), dtype=np.uint16),
                 "runeGraces": Box(low=0, high=2500, shape=(6,), dtype=np.uint16),
             }

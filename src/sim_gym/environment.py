@@ -13,15 +13,28 @@ class WoWSimsEnv(gym.Env):
         sim_duration_seconds,
         sim_step_duration_msec,
         reward_type: str = "final_dps",
-        mask_invalid_actions: bool = True,
     ):
         super(WoWSimsEnv, self).__init__()
         self.action_space = gym.spaces.Discrete(len(ACTION_SPACE))
         self.observation_space = State.get_observation_space()
 
-        # set up options
-        self._reward_type = reward_type
-        self._mask_invalid_actions = mask_invalid_actions
+        # set up reward type
+        self.calculate_reward = None
+        if reward_type == "delta_dps":
+            self.calculate_reward = self.calculate_reward_delta_dps
+        elif reward_type == "delta_damage":
+            self.calculate_reward = self.calculate_reward_delta_damage
+        elif reward_type == "final_dps":
+            self.calculate_reward = self.calculate_reward_final_dps
+        elif reward_type == "final_damage":
+            self.calculate_reward = self.calculate_reward_final_damage
+        elif reward_type == "abs_dps":
+            self.calculate_reward = self.calculate_reward_abs_dps
+        elif reward_type == "abs_damage":
+            self.calculate_reward = self.calculate_reward_abs_damage
+
+        assert self.calculate_reward != None, "%s is not a valid reward type" % reward_type
+
         self._sim_duration_seconds = sim_duration_seconds
 
         # initialize mutable state
@@ -39,12 +52,7 @@ class WoWSimsEnv(gym.Env):
         self._steps += 1
         action: Action = ACTION_SPACE[action]
 
-        if self._mask_invalid_actions:
-            # If we're masking invalid actions, then we should never get an invalid action
-            assert action.can_do(self.state), "%r cannot be done right now" % action
-        else:
-            if not action.can_do(self.state):
-                return self._get_obs(), -1000, False, self.get_metadata()
+        assert action.can_do(self.state), "%r cannot be done right now" % action
 
         action.do(self._sim_agent, self.state)
         new_state = self._sim_agent.get_state()
@@ -72,27 +80,27 @@ class WoWSimsEnv(gym.Env):
             print(" ")
         return obs, reward, done, self.get_metadata()
 
-    def calculate_reward(self):
-        reward = 0
-        if self._reward_type == "delta_dps":
-            if self.state.is_done:
-                reward = self.state.dps
-            else:
-                reward = self.state.dps - self._last_dps
-        elif self._reward_type == "delta_damage":
-            if self.state.is_done:
-                reward = self.state.damage
-            else:
-                reward = self.state.damage - self._last_damage
-        elif self._reward_type == "final_dps" and self.state.is_done:
-            reward = self.state.dps
-        elif self._reward_type == "final_damage" and self.state.is_done:
-            reward = self.state.damage - self._last_damage
-        elif self._reward_type == "abs_dps":
-            reward = self.state.dps
-        elif self._reward_type == "abs_damage":
-            reward = self.state.damage
-        return reward
+    def calculate_reward_delta_dps(self):
+        return self.state.dps - self._last_dps
+    
+    def calculate_reward_delta_damage(self):
+        return self.state.damage - self._last_damage
+    
+    def calculate_reward_final_dps(self):
+        if self.state.is_done:
+            return self.state.dps
+        return 0
+    
+    def calculate_reward_final_damage(self):
+        if self.state.is_done:
+            return self.state.damage - self._last_damage
+        return 0
+    
+    def calculate_reward_abs_dps(self):
+        return self.state.dps
+    
+    def calculate_reward_abs_damage(self):
+        return self.state.damage
 
     def get_metadata(self):
         return {
@@ -122,16 +130,12 @@ class WoWSimsEnv(gym.Env):
         self._sim_agent.close()
 
     def sample_possible_actions(self):
-        if self._mask_invalid_actions:
-            return np.random.choice(
-                [i for i, mask in enumerate(self.action_masks()) if mask]
-            )
-        return np.random.choice(len(ACTION_SPACE))
+        return np.random.choice(
+            [i for i, mask in enumerate(self.action_masks()) if mask]
+        )
 
     def action_masks(self):
-        if self._mask_invalid_actions:
-            return np.array([action.can_do(self.state) for action in ACTION_SPACE])
-        return np.ones(len(ACTION_SPACE))
+        return np.array([action.can_do(self.state) for action in ACTION_SPACE])
 
     def _get_obs(self):
         return self.state.get_observations()
