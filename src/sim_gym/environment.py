@@ -15,18 +15,23 @@ class WoWSimsEnv(gym.Env):
         reward_type: str = "final_dps",
         mask_invalid_actions: bool = True,
     ):
+        super(WoWSimsEnv, self).__init__()
         self.action_space = gym.spaces.Discrete(len(ACTION_SPACE))
         self.observation_space = State.get_observation_space()
-        self.state = None
-        self._sim_agent = SimAgent(port="/tmp/sim-agent.sock", step_duration_msec=sim_step_duration_msec)
+
+        # set up options
         self._reward_type = reward_type
         self._mask_invalid_actions = mask_invalid_actions
+        self._sim_duration_seconds = sim_duration_seconds
+
+        # initialize mutable state
+        self.state = None
         self._steps = 0
         self._commands = ""
-        self._sim_duration_seconds = sim_duration_seconds
         self._last_dps = 0
         self._last_damage = 0
         self._best_damage = 0
+        self._sim_agent = SimAgent(port="/tmp/sim-agent.sock", step_duration_msec=sim_step_duration_msec)
 
     def step(self, action):
         assert self.action_space.contains(action), "%r invalid" % action
