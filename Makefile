@@ -49,3 +49,9 @@ learn: venv
 
 learn-verbose: venv
 	$(VENV_ACTIVATE) && VERBOSE=1 ${PYTHON} src/model/learn.py
+
+docker-start:
+	docker-compose -f dockerfiles/docker-compose.yml up
+
+docker-learn:
+	docker-compose -f dockerfiles/docker-compose.yml run --rm client make learn-verbose
