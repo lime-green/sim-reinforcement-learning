@@ -49,7 +49,6 @@ def learn():
             sim_duration_seconds=episode_duration_seconds,
             sim_step_duration_msec=simulation_step_duration_msec,
             reward_type="delta_damage",
-            mask_invalid_actions=True,
         )
         env = create_multi_env(16, env_kwargs)
         # env = create_single_env(env_kwargs)
