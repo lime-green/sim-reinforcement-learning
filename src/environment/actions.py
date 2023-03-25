@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
 from agent.sim_agent import SimAgent
-from sim_gym.constants import SPELLS
-from sim_gym.state import State
+from environment.constants import SPELLS
+from environment.state import State
 
 
 class Action:

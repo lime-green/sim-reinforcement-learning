@@ -87,9 +87,9 @@ class SimConnection:
         self._connection.sendall(payload)
         logger.debug("finished sending request")
 
-        buffer = self._connection.recv(1024*15)
+        buffer = self._connection.recv(1024 * 15)
         response_length = int.from_bytes(buffer[:4], byteorder="little")
-        response = buffer[4:4 + response_length]
+        response = buffer[4 : 4 + response_length]
 
         response = SimResponse(response)
         assert response.success

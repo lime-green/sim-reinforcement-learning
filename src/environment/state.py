@@ -38,6 +38,34 @@ class State:
     def damage(self):
         return self._raw_state["totalDamage"]
 
+    @property
+    def runic_power(self):
+        return self._raw_state["runicPower"]
+
+    @property
+    def debuffs(self):
+        return self._debuffs_map
+
+    @property
+    def ability_damage(self):
+        return self._raw_state["abilityDamage"]
+
+    @property
+    def ability_dps(self):
+        return self._raw_state["abilityDPS"]
+
+    @property
+    def melee_dps(self):
+        return self._raw_state["meleeDPS"]
+
+    @property
+    def disease_dps(self):
+        return self._raw_state["diseaseDPS"]
+
+    @property
+    def time_elapsed(self):
+        return self._raw_state["currentTime"]
+
     def can_cast(self, spell):
         return self._abilities_map[spell]["canCast"]
 

@@ -7,12 +7,12 @@ from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.vec_env import SubprocVecEnv
 
 from model.dqn import MaskedDQN, MaskedPolicy
-from sim_gym.environment import WoWSimsEnv
+from environment.environment import WoWSimsEnv
 
 
-def policy_callback(l, g):
-    if l["info"]["is_success"]:
-        print(l["info"]["dps"], l["info"]["steps"])
+def policy_callback(locals, globals_):
+    if locals["info"]["is_success"]:
+        print("DPS", locals["info"]["dps"], "Steps", locals["info"]["steps"])
 
 
 def create_env(**kwargs):
@@ -41,18 +41,22 @@ def learn():
 
     episode_duration_seconds = 60
     simulation_step_duration_msec = 50
-    steps_per_episode = math.ceil((episode_duration_seconds * 1000) / simulation_step_duration_msec)
+    steps_per_episode = math.ceil(
+        (episode_duration_seconds * 1000) / simulation_step_duration_msec
+    )
     episodes_per_training_epoch = 500
+    verbose = bool(int(os.environ.get("VERBOSE", 0)))
 
     for i in range(60):
         env_kwargs = dict(
             sim_duration_seconds=episode_duration_seconds,
             sim_step_duration_msec=simulation_step_duration_msec,
             reward_type="delta_damage",
+            verbose=verbose,
         )
         env = create_multi_env(16, env_kwargs)
         # env = create_single_env(env_kwargs)
-        model = MaskedDQN(MaskedPolicy, env, verbose=int(os.environ.get("VERBOSE", 0)))
+        model = MaskedDQN(MaskedPolicy, env, verbose=verbose)
 
         model_load_path = f"./models/{j}-{model.__class__.__name__}"
         if os.path.exists(f"{model_load_path}.zip"):
@@ -60,7 +64,10 @@ def learn():
             model.load(model_load_path, env=env)
             print("Done loading model")
 
-        model.learn(total_timesteps=(steps_per_episode * episodes_per_training_epoch), progress_bar=True)
+        model.learn(
+            total_timesteps=(steps_per_episode * episodes_per_training_epoch),
+            progress_bar=True,
+        )
         current = evaluate_policy(
             model,
             model.env,
