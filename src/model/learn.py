@@ -8,12 +8,11 @@ from stable_baselines3.common.vec_env import SubprocVecEnv
 
 from model.dqn import MaskedDQN, MaskedPolicy
 from model.ppo import MaskablePPO
-from sim_gym.environment import WoWSimsEnv
+from environment.environment import WoWSimsEnv
 
-
-def policy_callback(l, g):
-    if l["info"]["is_success"]:
-        print(l["info"]["dps"], l["info"]["steps"])
+def policy_callback(locals, globals_):
+    if locals["info"]["is_success"]:
+        print("DPS", locals["info"]["dps"], "Steps", locals["info"]["steps"])
 
 
 def create_env(**kwargs):
@@ -38,12 +37,12 @@ def initialize_environment(count, env_kwargs):
         return create_single_env(env_kwargs)
     return create_multi_env(count, env_kwargs)
 
-def initialize_model(env):
+def initialize_model(env, verbose):
     model_type = os.environ.get("MODEL_TYPE", "PPO")
     if model_type == "PPO":
-        model = MaskablePPO("MlpPolicy", env, verbose=int(os.environ.get("VERBOSE", 0)))
+        model = MaskablePPO("MlpPolicy", env, verbose=verbose)
     elif model_type == "DQN":
-        model = MaskedDQN(MaskedPolicy, env, verbose=int(os.environ.get("VERBOSE", 0)))
+        model = MaskedDQN(MaskedPolicy, env, verbose=verbose)
     else:
         assert False, "%s is not a valid model type" % model_type
     load_latest_file(model, env)
@@ -78,6 +77,7 @@ def learn():
     best_result = 0
     best_file_path = None
 
+    verbose = bool(int(os.environ.get("VERBOSE", 0)))
     environment_count = os.environ.get("ENVIRONMENT_COUNT", 16)
     episode_duration_seconds = os.environ.get("EPISODE_DURATION_SECONDS", 60)
     simulation_step_duration_msec = os.environ.get("SIMULATION_STEP_DURATION_MSEC", 50)
@@ -89,9 +89,10 @@ def learn():
         sim_duration_seconds=episode_duration_seconds,
         sim_step_duration_msec=simulation_step_duration_msec,
         reward_type=reward_type,
+        verbose=verbose,
     )
     env = initialize_environment(environment_count, env_kwargs)
-    model = initialize_model(env)
+    model = initialize_model(env, verbose)
 
     for i in range(training_iteration_count):
         model.learn(total_timesteps=(steps_per_episode * episodes_per_training_iteration), progress_bar=True)
