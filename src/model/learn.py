@@ -5,9 +5,9 @@ from gym.wrappers import FlattenObservation
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.vec_env import SubprocVecEnv
-from sb3_contrib import MaskablePPO
 
 from model.dqn import MaskedDQN, MaskedPolicy
+from model.ppo import MaskablePPO
 from sim_gym.environment import WoWSimsEnv
 
 

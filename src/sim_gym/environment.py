@@ -51,14 +51,11 @@ class WoWSimsEnv(gym.Env):
 
         self._steps += 1
         action: Action = ACTION_SPACE[action]
-        attempted_illegal_action = not action.can_do(self.state)
+        assert action.can_do(self.state), "attempted illegal action %r" % action
         action.do(self._sim_agent, self.state)
         new_state = self._sim_agent.get_state()
         self.state = State(new_state)
-
         reward = self.calculate_reward()
-        if attempted_illegal_action:
-            reward = -100000
 
         if hasattr(action, "spell"):
             self._commands += action.spell + " " + str(math.floor(reward)) + " >"
