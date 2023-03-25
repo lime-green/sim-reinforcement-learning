@@ -1,0 +1,23 @@
+services:
+  client:
+    build:
+      context: ../
+      dockerfile: ./dockerfiles/client.Dockerfile
+    volumes:
+      - socket:/tmp
+      - type: bind
+        source: ../src/
+        target: /agent/src
+      - type: bind
+        source: ../models/
+        target: /agent/models
+
+  server:
+    build:
+      context: ../
+      dockerfile: ./dockerfiles/server.Dockerfile
+    volumes:
+      - socket:/tmp
+
+volumes:
+  socket:
