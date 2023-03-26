@@ -3,3 +3,5 @@ stable-baselines3
 tqdm
 sb3-contrib
 orjson
+black
+flake8

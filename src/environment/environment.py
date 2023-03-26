@@ -60,13 +60,10 @@ class WoWSimsEnv(gym.Env):
 
         self._steps += 1
         action: Action = ACTION_SPACE[action]
-
-        assert action.can_do(self.state), "%r cannot be done right now" % action
-
+        assert action.can_do(self.state), "attempted illegal action %r" % action
         action.do(self._sim_agent, self.state)
         new_state = self._sim_agent.get_state()
         self.state = State(new_state)
-
         reward = self.calculate_reward()
         self._total_reward += reward
 
@@ -91,6 +88,7 @@ class WoWSimsEnv(gym.Env):
             print("New best found:")
             print(self._commands)
             print("total = ", self._best_damage)
+            print("dps = ", self.state.dps)
             print(
                 "---------------------------------------------------------------------"
             )
