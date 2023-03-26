@@ -44,7 +44,7 @@ def initialize_environment(count, env_kwargs):
     return create_multi_env(count, env_kwargs)
 
 
-def initialize_model(env, verbose):
+def initialize_model(env, verbose, model_name=None):
     model_type = os.environ.get("MODEL_TYPE", "PPO")
     if model_type == "PPO":
         model = MaskablePPO("MlpPolicy", env, verbose=verbose)
@@ -52,35 +52,37 @@ def initialize_model(env, verbose):
         model = MaskedDQN(MaskedPolicy, env, verbose=verbose)
     else:
         assert False, "%s is not a valid model type" % model_type
-    load_latest_file(model, env)
-    return model
+    if model_name == None:
+        model_name = model.__class__.__name__
+    load_latest_file(model, env, model_name)
+    return model, model_name
 
 
-def find_highest_file_index(modelName):
-    if not os.path.exists(f"./models/{modelName}/"):
+def find_highest_file_index(model_name):
+    if not os.path.exists(f"./models/{model_name}/"):
         print("no path")
         return -1
     return max(
-        [int(f[: f.index(".")]) for f in os.listdir(f"./models/{modelName}/")],
+        [int(f[: f.index(".")]) for f in os.listdir(f"./models/{model_name}/")],
         default=-1,
     )
 
 
-def save_file(model):
-    new_file_index = find_highest_file_index(model.__class__.__name__) + 1
-    model_save_path = f"./models/{model.__class__.__name__}/{new_file_index}"
+def save_file(model, model_name):
+    new_file_index = find_highest_file_index(model_name) + 1
+    model_save_path = f"./models/{model_name}/{new_file_index}"
     print(f"Saving model to {model_save_path}.zip...")
     model.save(model_save_path, exclude=["policy_kwargs"])
     print("Done saving model")
     return model_save_path
 
 
-def load_latest_file(model, env):
-    file_index = find_highest_file_index(model.__class__.__name__)
-    if file_index == -1:
+def load_latest_file(model, env, model_name):
+    fileIndex = find_highest_file_index(model_name)
+    if fileIndex == -1:
         print("There is no existing model to load, starting learning from scratch")
     else:
-        model_load_path = f"./models/{model.__class__.__name__}/{file_index}"
+        model_load_path = f"./models/{model_name}/{fileIndex}"
         assert os.path.exists(f"{model_load_path}.zip")
         print(f"Loading existing model from {model_load_path}.zip...")
         model.load(model_load_path, env=env)
@@ -89,6 +91,7 @@ def load_latest_file(model, env):
 
 def learn():
     verbose = bool(int(os.environ.get("VERBOSE", 0)))
+    model_name = os.environ.get("MODEL_NAME", None)
     environment_count = int(os.environ.get("ENVIRONMENT_COUNT", 16))
     episode_duration_seconds = int(os.environ.get("EPISODE_DURATION_SECONDS", 60))
     simulation_step_duration_msec = int(
@@ -108,7 +111,7 @@ def learn():
         verbose=verbose,
     )
     env = initialize_environment(environment_count, env_kwargs)
-    model = initialize_model(env, verbose)
+    model, model_name = initialize_model(env, verbose, model_name)
 
     model.learn(
         total_timesteps=(steps_per_episode * episodes_per_training_iteration),
@@ -122,7 +125,7 @@ def learn():
         callback=policy_callback,
         render=False,
     )
-    save_file(model)
+    save_file(model, model_name)
     env.close()
 
 
