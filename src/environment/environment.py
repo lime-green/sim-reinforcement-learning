@@ -1,6 +1,7 @@
 import gym
 import numpy as np
 import math
+import os
 from rich import print
 
 from agent.sim_agent import SimAgent
@@ -211,8 +212,11 @@ class WoWSimsEnv(gym.Env):
 
     def close(self):
         self._sim_agent.close()
-        self._normalizer.build_normalization_config()
-        self._normalizer.save_normalization_config(NORMALIZATION_CONFIG)
+
+        if not os.path.exists(NORMALIZATION_CONFIG):
+            print("Saving normalization config")
+            self._normalizer.build_normalization_config()
+            self._normalizer.save_normalization_config(NORMALIZATION_CONFIG)
 
     def sample_possible_actions(self):
         return np.random.choice(
