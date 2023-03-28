@@ -74,11 +74,11 @@ def save_file(model):
 
 
 def load_latest_file(model, env):
-    fileIndex = find_highest_file_index(model.__class__.__name__)
-    if fileIndex == -1:
+    file_index = find_highest_file_index(model.__class__.__name__)
+    if file_index == -1:
         print("There is no existing model to load, starting learning from scratch")
     else:
-        model_load_path = f"./models/{model.__class__.__name__}/{fileIndex}"
+        model_load_path = f"./models/{model.__class__.__name__}/{file_index}"
         assert os.path.exists(f"{model_load_path}.zip")
         print(f"Loading existing model from {model_load_path}.zip...")
         model.load(model_load_path, env=env)
@@ -87,11 +87,13 @@ def load_latest_file(model, env):
 
 def learn():
     verbose = bool(int(os.environ.get("VERBOSE", 0)))
-    environment_count = os.environ.get("ENVIRONMENT_COUNT", 16)
-    episode_duration_seconds = os.environ.get("EPISODE_DURATION_SECONDS", 60)
-    simulation_step_duration_msec = os.environ.get("SIMULATION_STEP_DURATION_MSEC", 50)
-    episodes_per_training_iteration = os.environ.get(
-        "EPISODES_PER_TRAINING_ITERATION", 400
+    environment_count = int(os.environ.get("ENVIRONMENT_COUNT", 16))
+    episode_duration_seconds = int(os.environ.get("EPISODE_DURATION_SECONDS", 60))
+    simulation_step_duration_msec = int(
+        os.environ.get("SIMULATION_STEP_DURATION_MSEC", 50)
+    )
+    episodes_per_training_iteration = int(
+        os.environ.get("EPISODES_PER_TRAINING_ITERATION", 400)
     )
     reward_type = os.environ.get("REWARD_TYPE", "delta_damage")
     steps_per_episode = math.ceil(
@@ -119,6 +121,7 @@ def learn():
         render=False,
     )
     save_file(model)
+    env.close()
 
 
 if __name__ == "__main__":

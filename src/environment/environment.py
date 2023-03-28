@@ -1,10 +1,14 @@
 import gym
 import numpy as np
 import math
+from rich import print
+
 from agent.sim_agent import SimAgent
 from agent.sim_config import create_config
 from environment.actions import ACTION_SPACE, Action
 from environment.state import State
+
+NORMALIZATION_CONFIG = "normalization_config.json"
 
 
 class WoWSimsEnv(gym.Env):
@@ -18,6 +22,15 @@ class WoWSimsEnv(gym.Env):
         super(WoWSimsEnv, self).__init__()
         self.action_space = gym.spaces.Discrete(len(ACTION_SPACE))
         self.observation_space = State.get_observation_space()
+
+        self._normalizer = State.create_normalizer()
+        try:
+            self._normalizer.load_normalization_config(NORMALIZATION_CONFIG)
+            print("Loaded normalization config")
+            print(self._normalizer.normalization_config)
+        except FileNotFoundError:
+            print("No normalization config found, using unnormalized observations")
+
         self._verbose = verbose
 
         # set up reward type
@@ -62,8 +75,9 @@ class WoWSimsEnv(gym.Env):
         action: Action = ACTION_SPACE[action]
         assert action.can_do(self.state), "attempted illegal action %r" % action
         action.do(self._sim_agent, self.state)
+
         new_state = self._sim_agent.get_state()
-        self.state = State(new_state)
+        self.state = State(new_state, self._normalizer)
         reward = self.calculate_reward()
         self._total_reward += reward
 
@@ -71,7 +85,6 @@ class WoWSimsEnv(gym.Env):
             self._commands += action.spell + " " + str(math.floor(reward)) + " >"
 
         done = self.state.is_done
-
         obs = self._get_obs()
         self._last_state = self.state
 
@@ -185,7 +198,7 @@ class WoWSimsEnv(gym.Env):
             duration=self._sim_duration_seconds,
         )
         state = self._sim_agent.reset(sim_config)
-        self.state = State(state)
+        self.state = State(state, self._normalizer)
         self._last_state = None
         self._steps = 0
         self._commands = ""
@@ -198,6 +211,8 @@ class WoWSimsEnv(gym.Env):
 
     def close(self):
         self._sim_agent.close()
+        self._normalizer.build_normalization_config()
+        self._normalizer.save_normalization_config(NORMALIZATION_CONFIG)
 
     def sample_possible_actions(self):
         return np.random.choice(
