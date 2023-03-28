@@ -4,13 +4,12 @@ import numpy as np
 from gym.spaces import Dict, Discrete, Box, MultiBinary
 
 from .constants import BUFFS, DEBUFFS, SPELLS, RUNE_TYPE_MAP
-from .normalization import ObservationNormalizer
 
 SPELL_SET = set(SPELLS)
 
 
 class State:
-    def __init__(self, raw_state, normalizer):
+    def __init__(self, raw_state):
         self._raw_state = raw_state
         self._abilities_map = {
             ability["name"]: ability
@@ -21,20 +20,6 @@ class State:
             debuff["name"]: debuff for debuff in self._raw_state["debuffs"]
         }
         self._buffs_map = {buff["name"]: buff for buff in self._raw_state["buffs"]}
-        self._normalizer = normalizer
-
-    @classmethod
-    def create_normalizer(cls):
-        return ObservationNormalizer(
-            # exclude all the discrete values
-            exclude_keys=[
-                "isExecute35",
-                "runeTypes",
-                "debuffsActive",
-                "buffsActive",
-                "gcdAvailable",
-            ]
-        )
 
     @property
     def gcd_remaining(self):
@@ -84,7 +69,7 @@ class State:
         return self._abilities_map[spell]["canCast"]
 
     def get_observations(self):
-        return self._normalizer(self._get_observations())
+        return self._get_observations()
 
     def _get_observations(self):
         return {

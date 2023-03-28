@@ -9,6 +9,7 @@ from stable_baselines3.common.vec_env import SubprocVecEnv
 from model.dqn import MaskedDQN, MaskedPolicy
 from model.ppo import MaskablePPO
 from environment.environment import WoWSimsEnv
+from environment.normalization import NormalizeObservation
 
 
 def policy_callback(locals, globals_):
@@ -19,6 +20,7 @@ def policy_callback(locals, globals_):
 def create_env(**kwargs):
     env = WoWSimsEnv(**kwargs)
     env = FlattenObservation(env)
+    env = NormalizeObservation(env)
     return env
 
 

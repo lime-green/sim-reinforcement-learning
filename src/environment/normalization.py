@@ -1,117 +1,45 @@
-import json
-
 import numpy as np
+from gym.wrappers import normalize
 
 
-class NpEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, np.integer):
-            return int(obj)
-        if isinstance(obj, np.floating):
-            return float(obj)
-        if isinstance(obj, np.ndarray):
-            return obj.tolist()
-        return super(NpEncoder, self).default(obj)
+class NormalizeObservation(normalize.NormalizeObservation):
+    def __init__(
+        self,
+        env,
+        epsilon=1e-8,
+        scaling="minmax"
+    ):
+        super().__init__(env, epsilon)
 
-
-class ObservationNormalizer:
-    def __init__(self, exclude_keys=None):
-        self._value_cache = {}
-        self._normalization_config = {}
-        self._exclude_keys = set(exclude_keys or [])
-
-    def __call__(self, observations):
-        if not self._normalization_config:
-            self._record(observations)
-            return observations
-
-        normalized = self._normalize(observations)
-        return normalized
-
-    def build_normalization_config(self, scaling_type="minmax"):
-        for key, values in self._value_cache.items():
-            if isinstance(values[0], list):
-                self._normalization_config[key] = {
-                    "min": [np.min(v) for v in values],
-                    "max": [np.max(v) for v in values],
-                    "mean": [np.mean(v) for v in values],
-                    "std": [np.std(v) for v in values],
-                    "scaling_type": scaling_type,
-                    "is_list": True,
-                }
-            else:
-                self._normalization_config[key] = {
-                    "min": np.min(values),
-                    "max": np.max(values),
-                    "mean": np.mean(values),
-                    "std": np.std(values),
-                    "scaling_type": scaling_type,
-                    "is_list": False,
-                }
-        return self._normalization_config
-
-    def load_normalization_config(self, path):
-        with open(path, "r") as f:
-            self._normalization_config = json.load(f)
-
-    def save_normalization_config(self, path):
-        with open(path, "w") as f:
-            json.dump(self._normalization_config, f, indent=4, cls=NpEncoder)
-
-    @property
-    def normalization_config(self):
-        return self._normalization_config
-
-    def _record(self, observations):
-        for key, value in observations.items():
-            if key not in self._value_cache:
-                self._value_cache[key] = []
-
-            if isinstance(value, list):
-                for i, v in enumerate(value):
-                    if len(self._value_cache[key]) <= i:
-                        self._value_cache[key].append([])
-                    self._value_cache[key][i].append(v)
-            else:
-                self._value_cache[key].append(value)
-
-    def _minmax_scale(self, value, config, i=None):
-        min, max = config["min"], config["max"]
-        if i is not None:
-            min, max = config["min"][i], config["max"][i]
-
-        if max - min == 0:
-            return 0
-        return (value - min) / (max - min)
-
-    def _standard_scale(self, value, config, i=None):
-        mean, std = config["mean"], config["std"]
-        if i is not None:
-            mean, std = config["mean"][i], config["std"][i]
-
-        if std == 0:
-            return 0
-        return (value - mean) / std
-
-    def _normalize_observation(self, value, config):
-        scale = self._minmax_scale
-        if config["scaling_type"] == "standard":
-            scale = self._standard_scale
-
-        if config["is_list"]:
-            for i, v in enumerate(value):
-                value[i] = scale(v, config, i)
+        self.num_envs = getattr(env, "num_envs", 1)
+        self.is_vector_env = getattr(env, "is_vector_env", False)
+        if self.is_vector_env:
+            self.obs_rms = RunningMeanStdMinMax(shape=self.single_observation_space.shape)
         else:
-            value = scale(value, config)
-        return value
+            self.obs_rms = RunningMeanStdMinMax(shape=self.observation_space.shape)
+        self.epsilon = epsilon
+        self.scale_fn = {"standard": self._scale_standard, "minmax": self._scale_minmax}[scaling]
 
-    def _normalize(self, observations):
-        for key, value in observations.items():
-            if key not in self._normalization_config:
-                continue
-            if key in self._exclude_keys:
-                continue
+    def normalize(self, obs):
+        self.obs_rms.update(obs)
+        return self.scale_fn(obs)
 
-            config = self._normalization_config[key]
-            observations[key] = self._normalize_observation(value, config)
-        return observations
+    def _scale_standard(self, obs):
+        return (obs - self.obs_rms.mean) / np.sqrt(self.obs_rms.var + self.epsilon)
+
+    def _scale_minmax(self, obs):
+        return (obs - self.obs_rms.min) / (self.obs_rms.max - self.obs_rms.min + self.epsilon)
+
+
+class RunningMeanStdMinMax(normalize.RunningMeanStd):
+    def __init__(self, epsilon=1e-4, shape=()):
+        super().__init__(epsilon, shape)
+        self.min = np.zeros(shape)
+        self.max = np.zeros(shape)
+
+    def update_from_moments(self, batch_mean, batch_var, batch_count):
+        self.mean, self.var, self.count = normalize.update_mean_var_count_from_moments(
+            self.mean, self.var, self.count, batch_mean, batch_var, batch_count
+        )
+        self.min = np.minimum(self.min, batch_var)
+        self.max = np.maximum(self.max, batch_var)
