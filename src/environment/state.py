@@ -91,7 +91,7 @@ class State:
             "gcdRemaining": self.gcd_remaining,
             "runeCDs": self._raw_state["runeCDs"],
             "runeGraces": self._raw_state["runeGraces"],
-            "runicPower": self.runic_power(),
+            "runicPower": self.runic_power,
         }
 
     @staticmethod
