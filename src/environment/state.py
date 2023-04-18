@@ -91,6 +91,7 @@ class State:
             "gcdRemaining": self.gcd_remaining,
             "runeCDs": self._raw_state["runeCDs"],
             "runeGraces": self._raw_state["runeGraces"],
+            "runicPower": self.runic_power,
         }
 
     @staticmethod
@@ -120,6 +121,7 @@ class State:
                 "gcdRemaining": Box(low=0, high=1500, shape=(1,), dtype=np.uint16),
                 "runeCDs": Box(low=0, high=1000 * 10, shape=(6,), dtype=np.uint16),
                 "runeGraces": Box(low=0, high=2500, shape=(6,), dtype=np.uint16),
+                "runicPower": Box(low=0, high=130, shape=(1,), dtype=np.uint16),
             }
         )
 
